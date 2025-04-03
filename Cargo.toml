@@ -1,0 +1,19 @@
+[package]
+name = "tempie"
+version = "0.1.0"
+edition = "2024"
+description = "Jira time tracking CLI tool"
+authors = ["Oleksandr Cherniavskiy <mutantsan@gmail.com>"]
+
+[dependencies]
+reqwest = { version = "0.12.15", features = ["json"] }
+tokio = { version = "1", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+clap = { version = "4.0", features = ["derive"] }
+config = "0.15"
+anyhow = "1.0"
+chrono = "0.4"
+sled = "0.34.7"
+dialoguer = "0.11"
+webbrowser = "1.0"
