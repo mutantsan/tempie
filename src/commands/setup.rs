@@ -10,7 +10,18 @@ pub fn setup() {
 
     if storage.get_credentials().is_some() {
         println!("\nJira credentials already saved!");
-        return;
+
+        let overwrite_prompt: String = Input::new()
+            .with_prompt("Do you want to overwrite credentials? (y/N)")
+            .default("n".to_string())
+            .interact_text()
+            .unwrap();
+
+        if overwrite_prompt.to_lowercase() == "y" {
+            println!("Overwriting credentials...");
+        } else {
+            return;
+        }
     }
 
     println!("\nStep 1/4:");

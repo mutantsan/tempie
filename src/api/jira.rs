@@ -21,7 +21,7 @@ pub async fn get_jira_issue(issue_or_key: &str) -> Result<JiraIssue, String> {
     let raw_response = response.text().await.expect("Failed to get response text");
 
     let json_data: JiraIssue = serde_json::from_str(&raw_response)
-        .map_err(|e| format!("Unable to parse Jira issue from response: {}", e))?;
+        .map_err(|e| format!("Unable to retrieve Jira issue: {}", e))?;
 
     let issue = JiraIssue {
         key: json_data.key,
