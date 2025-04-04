@@ -49,10 +49,7 @@ async fn main() {
     match cli.command {
         Commands::Setup => setup(),
         Commands::List { from_date, to_date } => {
-            ensure_credentials_exist().unwrap_or_else(|err| {
-                eprintln!("{}", err);
-                std::process::exit(1);
-            });
+            ensure_credentials_exist();
             list(&from_date, &to_date).await
         }
         Commands::Log {
@@ -60,17 +57,11 @@ async fn main() {
             time_spent,
             comment,
         } => {
-            ensure_credentials_exist().unwrap_or_else(|err| {
-                eprintln!("{}", err);
-                std::process::exit(1);
-            });
+            ensure_credentials_exist();
             log_time(&issue_key, &time_spent, comment).await
         }
         Commands::Delete { worklog_id } => {
-            ensure_credentials_exist().unwrap_or_else(|err| {
-                eprintln!("{}", err);
-                std::process::exit(1);
-            });
+            ensure_credentials_exist();
             delete_log(&worklog_id).await
         }
     }

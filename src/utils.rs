@@ -1,15 +1,16 @@
 use crate::storage::Storage;
 use chrono::{Datelike, Local, NaiveDate, Weekday};
 use humantime::parse_duration;
-use std::time::Duration;
 
 const WORKING_HOURS_PER_DAY: i32 = 8;
 const SECONDS_PER_HOUR: i32 = 3600;
 
-pub fn parse_duration_from_string(duration_str: &str) -> Duration {
-    parse_duration(duration_str).unwrap()
+// Parse a duration from a string. hours:minutes -> seconds
+pub fn parse_duration_from_string(duration_str: &str) -> i32 {
+    parse_duration(duration_str).unwrap().as_secs() as i32
 }
 
+// Format a duration in hours and minutes. seconds -> hours:minutes
 pub fn format_duration(seconds: i32) -> String {
     let total_minutes = seconds / 60;
     let hours = total_minutes / 60;
@@ -21,6 +22,10 @@ pub fn format_duration(seconds: i32) -> String {
 
     if minutes == 0 {
         return format!("{}h", hours);
+    }
+
+    if hours == 0 {
+        return format!("{}m", minutes);
     }
 
     format!("{}h{}m", hours, minutes)
@@ -48,27 +53,30 @@ pub fn working_seconds_in_current_month() -> i32 {
     working_days * WORKING_HOURS_PER_DAY * SECONDS_PER_HOUR
 }
 
+// Check if a day is a weekend
 fn is_weekend(weekday: Weekday) -> bool {
     weekday == Weekday::Sat || weekday == Weekday::Sun
 }
 
+// Get the current month name
 pub fn current_month_name() -> String {
     let today = Local::now();
     today.format("%B").to_string()
 }
 
+// Get today's date in ISO 8601 format
 pub fn today_as_iso8601() -> String {
     let today = Local::now().format("%Y-%m-%d").to_string();
     today
 }
 
-pub fn ensure_credentials_exist() -> Result<(), String> {
+// Ensure credentials exist and exit if they don't
+pub fn ensure_credentials_exist() -> () {
     let storage = Storage::new();
     let config = storage.get_credentials();
 
-    if config.is_some() {
-        Ok(())
-    } else {
-        Err("Credentials are not set up. Please run `tempie setup` first.".to_string())
+    if !config.is_some() {
+        eprintln!("Credentials are not set up. Please run `tempie setup` first.");
+        std::process::exit(1);
     }
 }

@@ -3,6 +3,7 @@ use crate::models::WorklogItem;
 use crate::storage::Storage;
 use crate::utils::{current_month_name, format_duration, working_seconds_in_current_month};
 
+use spinners::{Spinner, Spinners};
 use tabled::builder::Builder;
 use tabled::settings::object::Rows;
 use tabled::{
@@ -11,13 +12,15 @@ use tabled::{
 };
 
 pub async fn list(from_date: &str, to_date: &str) {
-    println!("Retrieving worklogs...\n");
+    let mut spinner = Spinner::new(Spinners::Dots, "Retrieving worklogs...".to_string());
 
     match list_worklogs(from_date, to_date).await {
         Ok(worklogs) => {
-            println!("{}", build_table(worklogs));
+            spinner.stop_with_message(format!("\n{}", build_table(worklogs)));
         }
-        Err(e) => eprintln!("Error. Failed to list worklogs: {}", e),
+        Err(e) => {
+            spinner.stop_with_message(format!("\nError. Failed to list worklogs: {}", e));
+        }
     }
 }
 
@@ -44,9 +47,7 @@ fn build_table(worklogs: Vec<WorklogItem>) -> Table {
         ]);
     }
 
-    builder.push_record(vec![
-        format!("{}/8h", format_duration(total_time)).as_str(),
-    ]);
+    builder.push_record(vec![format!("{}/8h", format_duration(total_time)).as_str()]);
 
     let mut table = builder.build();
 

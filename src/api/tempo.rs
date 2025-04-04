@@ -20,7 +20,6 @@ pub async fn log_time(
     let url = format!("{}/worklogs/", TEMPO_BASE_URL,);
     let client = Client::new();
 
-    println!("Logging time on {}: {}: {}", issue_key, time_spent, url);
     let response = client
         .post(&url)
         .bearer_auth(&config.tempo_token)
@@ -29,7 +28,7 @@ pub async fn log_time(
             "issueId": issue.map_err(|e| format!("Failed to get Jira issue: {}", e))?.id,
             "description": comment.unwrap_or_default(),
             "startDate": Local::now().format("%Y-%m-%d").to_string(),
-            "timeSpentSeconds": parse_duration_from_string(time_spent).as_secs() as i32
+            "timeSpentSeconds": parse_duration_from_string(time_spent)
         }))
         .send()
         .await
@@ -51,12 +50,6 @@ pub async fn log_time(
         .json()
         .await
         .map_err(|e| format!("Failed to parse JSON: {}", e))?;
-
-    println!("Logged time on {}: {}", issue_key, time_spent);
-    println!(
-        "Run `tempie delete {}` to delete it",
-        json_data.tempo_worklog_id
-    );
 
     Ok(json_data)
 }

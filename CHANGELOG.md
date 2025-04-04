@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - Implement list command and table display
 - Finish log command, add delete command
 - Add overwrite promt for credential setup command
+- Add spinner, refactor output
 
 ### 🐛 Bug Fixes
 
