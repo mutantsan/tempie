@@ -1,42 +1,64 @@
 use crate::api::jira::get_jira_issue;
 use crate::models::*;
 use crate::storage::Storage;
+use crate::utils::parse_duration_from_string;
+use chrono::Local;
 use reqwest::{Client, StatusCode};
+
 const TEMPO_BASE_URL: &str = "https://api.tempo.io/4";
 
 pub async fn log_time(
     issue_key: &str,
     time_spent: &str,
     comment: Option<String>,
-) -> Result<(), String> {
+) -> Result<WorklogItem, String> {
     let storage = Storage::new();
     let config = storage.get_credentials().unwrap();
 
     let issue = get_jira_issue(&issue_key).await;
 
-    let url = format!(
-        "{}/rest/api/3/issue/{}/worklog",
-        config.url,
-        issue.unwrap().id
-    );
+    let url = format!("{}/worklogs/", TEMPO_BASE_URL,);
     let client = Client::new();
 
+    println!("Logging time on {}: {}: {}", issue_key, time_spent, url);
     let response = client
         .post(&url)
-        .json(
-            &serde_json::json!({ "timeSpent": time_spent, "comment": comment.unwrap_or_default() }),
-        )
+        .bearer_auth(&config.tempo_token)
+        .json(&serde_json::json!({
+            "authorAccountId": config.account_id,
+            "issueId": issue.map_err(|e| format!("Failed to get Jira issue: {}", e))?.id,
+            "description": comment.unwrap_or_default(),
+            "startDate": Local::now().format("%Y-%m-%d").to_string(),
+            "timeSpentSeconds": parse_duration_from_string(time_spent).as_secs() as i32
+        }))
         .send()
-        .await;
+        .await
+        .map_err(|e| format!("Request error: {}", e))?;
 
-    match response {
-        Ok(resp) if resp.status() == StatusCode::CREATED => {
-            println!("Time logged successfully on {}: {}", issue_key, time_spent);
-            Ok(())
-        }
-        Ok(resp) => Err(format!("Failed to log time: {} - {}", url, resp.status())),
-        Err(e) => Err(format!("Request error: {}", e)),
+    if !response.status().is_success() {
+        let status = response.status();
+        let error_body = response
+            .text()
+            .await
+            .unwrap_or_else(|_| "Failed to read error body".to_string());
+        return Err(format!(
+            "Failed to fetch worklogs: {}, {}",
+            status, error_body
+        ));
     }
+
+    let json_data: WorklogItem = response
+        .json()
+        .await
+        .map_err(|e| format!("Failed to parse JSON: {}", e))?;
+
+    println!("Logged time on {}: {}", issue_key, time_spent);
+    println!(
+        "Run `tempie delete {}` to delete it",
+        json_data.tempo_worklog_id
+    );
+
+    Ok(json_data)
 }
 
 pub async fn list_worklogs(from_date: &str, to_date: &str) -> Result<Vec<WorklogItem>, String> {
@@ -69,4 +91,26 @@ pub async fn list_worklogs(from_date: &str, to_date: &str) -> Result<Vec<Worklog
     }
 
     Ok(json_data.results)
+}
+
+// Delete a worklog by its ID
+pub async fn delete_worklog(worklog_id: &str) -> Result<(), String> {
+    let storage = Storage::new();
+    let config = storage.get_credentials().unwrap();
+
+    let response = Client::new()
+        .delete(&format!("{}/worklogs/{}", TEMPO_BASE_URL, worklog_id))
+        .bearer_auth(&config.tempo_token)
+        .json(&serde_json::json!({
+            "id": worklog_id
+        }))
+        .send()
+        .await
+        .map_err(|e| format!("Request error: {}", e))?;
+
+    if response.status() != StatusCode::NO_CONTENT {
+        return Err(format!("Failed to delete worklog: {}", response.status()));
+    }
+
+    Ok(())
 }

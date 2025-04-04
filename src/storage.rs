@@ -8,7 +8,7 @@ use crate::models::JiraIssue;
 static DB_INSTANCE: OnceLock<sled::Db> = OnceLock::new();
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct JiraCredentials {
+pub struct UserCredentials {
     pub url: String,
     pub account_id: String,
     pub tempo_token: String,
@@ -30,7 +30,7 @@ impl Storage {
     }
 
     // Store Jira credentials
-    pub fn store_credentials(&self, creds: &JiraCredentials) {
+    pub fn store_credentials(&self, creds: &UserCredentials) {
         let serialized = serde_json::to_string(creds).unwrap();
         self.db
             .insert("jira_credentials", serialized.as_bytes())
@@ -39,7 +39,7 @@ impl Storage {
     }
 
     // Get Jira credentials
-    pub fn get_credentials(&self) -> Option<JiraCredentials> {
+    pub fn get_credentials(&self) -> Option<UserCredentials> {
         self.db
             .get("jira_credentials")
             .ok()

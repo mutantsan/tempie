@@ -1,10 +1,10 @@
 mod api;
 mod commands;
-mod storage;
 mod models;
+mod storage;
 mod utils;
 
-use crate::commands::{list, log_time, setup};
+use crate::commands::{delete_log, list, log_time, setup};
 use chrono::Local;
 use clap::{Parser, Subcommand};
 
@@ -32,6 +32,8 @@ enum Commands {
         time_spent: String,
         comment: Option<String>,
     },
+    /// Delete worklog
+    Delete { worklog_id: String },
 }
 
 fn today_as_iso8601() -> String {
@@ -51,5 +53,6 @@ async fn main() {
             time_spent,
             comment,
         } => log_time(&issue_key, &time_spent, comment).await,
+        Commands::Delete { worklog_id } => delete_log(&worklog_id).await,
     }
 }

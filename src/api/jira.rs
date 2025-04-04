@@ -11,9 +11,7 @@ pub async fn get_jira_issue(issue_or_key: &str) -> Result<JiraIssue, String> {
         return Ok(jira_issue);
     }
 
-    let url = format!("{}/rest/api/3/project/{}", config.url, issue_or_key);
-
-    println!("Getting issue from JIRA: {}", url);
+    let url = format!("{}/rest/api/3/issue/{}", config.url, issue_or_key);
 
     let client = Client::new()
         .get(&url)
@@ -25,8 +23,13 @@ pub async fn get_jira_issue(issue_or_key: &str) -> Result<JiraIssue, String> {
     let json_data: JiraIssue = serde_json::from_str(&raw_response)
         .map_err(|e| format!("Unable to parse Jira issue from response: {}", e))?;
 
-    storage.store_jira_issue(json_data.key.as_str(), &json_data);
-    storage.store_jira_issue(json_data.id.as_str(), &json_data);
+    let issue = JiraIssue {
+        key: json_data.key,
+        id: json_data.id,
+    };
 
-    Ok(json_data)
+    storage.store_jira_issue(&issue.key.as_str(), &issue);
+    storage.store_jira_issue(&issue.id.as_str(), &issue);
+
+    Ok(issue)
 }

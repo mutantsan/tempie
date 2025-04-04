@@ -1,7 +1,7 @@
 use crate::api::list_worklogs;
 use crate::models::WorklogItem;
 use crate::storage::Storage;
-use crate::utils::{current_month_name, to_duration, working_seconds_in_current_month};
+use crate::utils::{current_month_name, format_duration, working_seconds_in_current_month};
 
 use tabled::builder::Builder;
 use tabled::settings::object::Rows;
@@ -24,7 +24,7 @@ pub async fn list(from_date: &str, to_date: &str) {
 fn build_table(worklogs: Vec<WorklogItem>) -> Table {
     let storage = Storage::new();
     let config = storage.get_credentials().unwrap();
-    let working_hours = to_duration(working_seconds_in_current_month());
+    let working_hours = format_duration(working_seconds_in_current_month());
     let mut builder = Builder::default();
     let mut total_time = 0;
 
@@ -38,14 +38,14 @@ fn build_table(worklogs: Vec<WorklogItem>) -> Table {
 
         builder.push_record(vec![
             worklog.tempo_worklog_id.to_string(),
-            to_duration(worklog.time_spent_seconds),
+            format_duration(worklog.time_spent_seconds),
             worklog.description,
             format!("{}/browse/{}", config.url, worklog.jira_issue.unwrap().key),
         ]);
     }
 
     builder.push_record(vec![
-        format!("Today {}/8h", to_duration(total_time)).as_str(),
+        format!("Today {}/8h", format_duration(total_time)).as_str(),
     ]);
 
     let mut table = builder.build();

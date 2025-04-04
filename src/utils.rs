@@ -1,32 +1,28 @@
 use chrono::{Datelike, Local, NaiveDate, Weekday};
+use humantime::parse_duration;
+use std::time::Duration;
 
 const WORKING_HOURS_PER_DAY: i32 = 8;
 const SECONDS_PER_HOUR: i32 = 3600;
 
-// Convert seconds to duration string, e.g 7560 -> "2h6m"
-pub fn to_duration(seconds: i32) -> String {
-    let hours = seconds.abs() / 3600;
-    let minutes = (seconds.abs() % 3600) / 60;
+pub fn parse_duration_from_string(duration_str: &str) -> Duration {
+    parse_duration(duration_str).unwrap()
+}
+
+pub fn format_duration(seconds: i32) -> String {
+    let total_minutes = seconds / 60;
+    let hours = total_minutes / 60;
+    let minutes = total_minutes % 60;
 
     if hours == 0 && minutes == 0 {
         return "0h".to_string();
     }
 
-    let mut duration = String::new();
-
-    if seconds < 0 {
-        duration += "-";
+    if minutes == 0 {
+        return format!("{}h", hours);
     }
 
-    if hours > 0 {
-        duration += &format!("{}h", hours);
-    }
-
-    if minutes > 0 {
-        duration += &format!("{}m", minutes);
-    }
-
-    duration
+    format!("{}h{}m", hours, minutes)
 }
 
 // Get how many working hours in a current month
