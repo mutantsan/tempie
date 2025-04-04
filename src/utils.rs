@@ -1,3 +1,4 @@
+use crate::storage::Storage;
 use chrono::{Datelike, Local, NaiveDate, Weekday};
 use humantime::parse_duration;
 use std::time::Duration;
@@ -54,4 +55,20 @@ fn is_weekend(weekday: Weekday) -> bool {
 pub fn current_month_name() -> String {
     let today = Local::now();
     today.format("%B").to_string()
+}
+
+pub fn today_as_iso8601() -> String {
+    let today = Local::now().format("%Y-%m-%d").to_string();
+    today
+}
+
+pub fn ensure_credentials_exist() -> Result<(), String> {
+    let storage = Storage::new();
+    let config = storage.get_credentials();
+
+    if config.is_some() {
+        Ok(())
+    } else {
+        Err("Credentials are not set up. Please run `tempie setup` first.".to_string())
+    }
 }

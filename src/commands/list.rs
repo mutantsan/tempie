@@ -45,7 +45,7 @@ fn build_table(worklogs: Vec<WorklogItem>) -> Table {
     }
 
     builder.push_record(vec![
-        format!("Today {}/8h", format_duration(total_time)).as_str(),
+        format!("{}/8h", format_duration(total_time)).as_str(),
     ]);
 
     let mut table = builder.build();
