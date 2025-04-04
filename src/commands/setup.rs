@@ -1,4 +1,4 @@
-use crate::storage::{UserCredentials, Storage};
+use crate::storage::{Storage, UserCredentials};
 use dialoguer::{Input, Password};
 
 const JIRA_API_TOKENS_URL: &str = "https://id.atlassian.com/manage-profile/security/api-tokens";
@@ -8,22 +8,48 @@ const TEMPO_API_INTEGRATION_URL: &str =
 pub fn setup() {
     let storage = Storage::new();
 
-    if storage.get_credentials().is_some() {
-        println!("\nJira credentials already saved!");
-
-        let overwrite_prompt: String = Input::new()
-            .with_prompt("Do you want to overwrite credentials? (y/N)")
-            .default("n".to_string())
-            .interact_text()
-            .unwrap();
-
-        if overwrite_prompt.to_lowercase() == "y" {
-            println!("Overwriting credentials...");
-        } else {
-            return;
-        }
+    if !should_overwrite_credentials(&storage) {
+        return;
     }
 
+    let (jira_url, account_id) = get_jira_credentials();
+    let tempo_token = get_tempo_token(&jira_url);
+    let jira_token = get_jira_token();
+    let jira_email = get_jira_email();
+
+    storage.store_credentials(&UserCredentials {
+        url: jira_url.clone(),
+        account_id,
+        tempo_token,
+        jira_token,
+        jira_email,
+    });
+
+    println!("\nJira credentials saved successfully!");
+}
+
+fn should_overwrite_credentials(storage: &Storage) -> bool {
+    if storage.get_credentials().is_none() {
+        return true;
+    }
+
+    println!("\nJira credentials already saved!");
+
+    let overwrite_prompt: String = Input::new()
+        .with_prompt("Do you want to overwrite credentials? (y/N)")
+        .default("n".to_string())
+        .interact_text()
+        .unwrap();
+
+    if overwrite_prompt.to_lowercase() == "y" {
+        println!("Overwriting credentials...");
+        true
+    } else {
+        false
+    }
+}
+
+fn get_jira_credentials() -> (String, String) {
     println!("\nStep 1/4:");
     println!("Enter your Jira profile URL to fetch your `account id` and Jira `domain name`:");
     println!("1. Navigate to the top-right corner and click your avatar");
@@ -35,8 +61,26 @@ pub fn setup() {
         .interact_text()
         .unwrap();
 
-    let jira_url = profile_url.split("/jira/").next().unwrap().to_string();
+    let parts: Vec<&str> = profile_url.split("/jira/people/").collect();
 
+    match parts.as_slice() {
+        [url, id] => {
+            let jira_url = url.to_string();
+            let account_id = id.to_string();
+
+            (jira_url, account_id)
+        }
+        _ => {
+            eprintln!(
+                "\nInvalid Jira URL. Please make sure you've copied the correct profile URL."
+            );
+            eprintln!("Example: https://xxx.jira.com/jira/people/1b2c3d4e5f6g7h8i9j0k");
+            std::process::exit(1);
+        }
+    }
+}
+
+fn get_tempo_token(jira_url: &str) -> String {
     println!("\nStep 2/4:");
     println!("Enter your tempo token. You can generate it here:");
     println!("{}{}\n", jira_url, TEMPO_API_INTEGRATION_URL);
@@ -45,11 +89,13 @@ pub fn setup() {
         println!("The link should have opened automatically in your browser\n");
     }
 
-    let tempo_token: String = Password::new()
+    Password::new()
         .with_prompt("Enter your Tempo API token")
         .interact()
-        .unwrap();
+        .unwrap()
+}
 
+fn get_jira_token() -> String {
     println!("\nStep 3/4:");
     println!("Enter your Jira API token:");
     println!("You can generate it here: {}\n", JIRA_API_TOKENS_URL);
@@ -58,38 +104,18 @@ pub fn setup() {
         println!("The link should have opened automatically in your browser\n");
     }
 
-    let jira_token: String = Password::new()
+    Password::new()
         .with_prompt("Enter your Jira API token")
         .interact()
-        .unwrap();
+        .unwrap()
+}
 
+fn get_jira_email() -> String {
     println!("\nStep 4/4:");
     println!("This is the last step! Enter your Jira email:");
 
-    let jira_email: String = Input::new()
+    Input::new()
         .with_prompt("Enter your Jira email")
         .interact_text()
-        .unwrap();
-
-    storage.store_credentials(&UserCredentials {
-        url: jira_url.clone(),
-        account_id: extract_account_id(&profile_url)
-            .unwrap_or_else(|| {
-                eprintln!("\nError: Could not extract account ID from the provided URL.");
-                eprintln!("URL: {}", profile_url);
-                eprintln!("Please make sure you've copied the correct profile URL.");
-                eprintln!("The URL should be from your Jira profile page.");
-                std::process::exit(1);
-            })
-            .to_string(),
-        tempo_token,
-        jira_token,
-        jira_email,
-    });
-
-    println!("\nJira credentials saved successfully!");
-}
-
-fn extract_account_id(url: &str) -> Option<&str> {
-    url.rsplit_once("/people/")?.1.split('/').next()
+        .unwrap()
 }

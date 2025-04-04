@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
+## [0.3.1] - 2025-04-04
+
+### 🚜 Refactor
+
+- Refactor setup command, improve credential validation
+
+## [0.3.0] - 2025-04-04
 
 ### 🚀 Features
 
