@@ -1,12 +1,19 @@
 use serde::{Deserialize, Serialize};
 use serde_json;
 use sled;
+use std::sync::OnceLock;
+
+use crate::models::JiraIssue;
+
+static DB_INSTANCE: OnceLock<sled::Db> = OnceLock::new();
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct JiraCredentials {
     pub url: String,
     pub account_id: String,
-    pub api_token: String,
+    pub tempo_token: String,
+    pub jira_token: String,
+    pub jira_email: String,
 }
 
 pub struct Storage {
@@ -15,8 +22,11 @@ pub struct Storage {
 
 impl Storage {
     pub fn new() -> Self {
-        let db = sled::open("tempie.db").expect("Failed to open sled database");
-        Storage { db }
+        let db = DB_INSTANCE
+            .get_or_init(|| sled::open("tempie.db").expect("Failed to open sled database"))
+            .clone();
+
+        Self { db }
     }
 
     // Store Jira credentials
@@ -28,6 +38,7 @@ impl Storage {
         self.db.flush().unwrap();
     }
 
+    // Get Jira credentials
     pub fn get_credentials(&self) -> Option<JiraCredentials> {
         self.db
             .get("jira_credentials")
@@ -36,17 +47,20 @@ impl Storage {
             .and_then(|v| serde_json::from_slice(&v).ok())
     }
 
-    // // Store arbitrary key-value data (for future use)
-    // pub fn store_data(&self, key: &str, value: &str) {
-    //     self.db.insert(key, value.as_bytes()).unwrap();
-    //     self.db.flush().unwrap();
-    // }
+    // Store jira issue info
+    pub fn store_jira_issue(&self, key: &str, value: &JiraIssue) {
+        self.db
+            .insert(key, serde_json::to_string(value).unwrap().as_bytes())
+            .unwrap();
+        self.db.flush().unwrap();
+    }
 
-    // pub fn get_data(&self, key: &str) -> Option<String> {
-    //     self.db
-    //         .get(key)
-    //         .ok()
-    //         .flatten()
-    //         .and_then(|v| String::from_utf8(v.to_vec()).ok())
-    // }
+    // Get jira issue info
+    pub fn get_jira_issue(&self, key_or_id: &str) -> Option<JiraIssue> {
+        self.db
+            .get(key_or_id)
+            .ok()
+            .flatten()
+            .and_then(|v| serde_json::from_slice(&v).ok())
+    }
 }

@@ -1,8 +1,11 @@
 mod api;
 mod commands;
 mod storage;
+mod models;
+mod utils;
 
 use crate::commands::{list, log_time, setup};
+use chrono::Local;
 use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
@@ -18,9 +21,9 @@ enum Commands {
     Setup,
     /// List worklogs
     List {
-        #[arg(default_value_t = String::from("today"))]
+        #[arg(default_value_t = today_as_iso8601())]
         from_date: String,
-        #[arg(default_value_t = String::from("today"))]
+        #[arg(default_value_t = today_as_iso8601())]
         to_date: String,
     },
     /// Log time
@@ -29,6 +32,11 @@ enum Commands {
         time_spent: String,
         comment: Option<String>,
     },
+}
+
+fn today_as_iso8601() -> String {
+    let today = Local::now().format("%Y-%m-%d").to_string();
+    today
 }
 
 #[tokio::main]

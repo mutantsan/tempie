@@ -1,0 +1,1045 @@
+{
+    "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations,customfield_11300.properties,customfield_11000.requestTypePractice,customfield_11500.properties",
+    "id": "77218",
+    "self": "https://linkdigital.jira.com/rest/api/2/issue/77218",
+    "key": "ST-60",
+    "fields": {
+        "statuscategorychangedate": "2021-11-23T01:40:37.321+1100",
+        "fixVersions": [],
+        "customfield_11200": "1|i00kdv:",
+        "statusCategory": {
+            "self": "https://linkdigital.jira.com/rest/api/2/statuscategory/2",
+            "id": 2,
+            "key": "new",
+            "colorName": "blue-gray",
+            "name": "To Do"
+        },
+        "resolution": null,
+        "customfield_12800": null,
+        "customfield_10105": null,
+        "customfield_12802": null,
+        "customfield_12801": null,
+        "customfield_10900": null,
+        "customfield_12804": null,
+        "customfield_12803": null,
+        "customfield_10506": null,
+        "customfield_12806": "1. Requirements in the description are implemented.",
+        "customfield_12805": null,
+        "customfield_12807": null,
+        "lastViewed": "2025-04-04T17:59:26.445+1100",
+        "customfield_12000": null,
+        "customfield_12001": null,
+        "priority": {
+            "self": "https://linkdigital.jira.com/rest/api/2/priority/4",
+            "iconUrl": "https://linkdigital.jira.com/images/icons/priorities/minor.svg",
+            "name": "Minor",
+            "id": "4"
+        },
+        "customfield_12400": "{}",
+        "customfield_10100": null,
+        "customfield_10101": null,
+        "customfield_10102": null,
+        "labels": [],
+        "customfield_10103": null,
+        "customfield_11700": {
+            "self": "https://linkdigital.jira.com/rest/api/2/customFieldOption/10500",
+            "value": "Probably",
+            "id": "10500"
+        },
+        "customfield_11702": null,
+        "customfield_11701": {
+            "self": "https://linkdigital.jira.com/rest/api/2/customFieldOption/10504",
+            "value": "ALL defects resolved",
+            "id": "10504"
+        },
+        "customfield_11704": 0.0,
+        "timeestimate": null,
+        "aggregatetimeoriginalestimate": null,
+        "versions": [],
+        "issuelinks": [],
+        "assignee": {
+            "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=5d3f88174125b20c31599c3a",
+            "accountId": "5d3f88174125b20c31599c3a",
+            "emailAddress": "cherniavskyi.alexandr@linkdigital.com.au",
+            "avatarUrls": {
+                "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d3f88174125b20c31599c3a/17f5d00e-4b1b-4b9c-b029-55c95d594f64/48",
+                "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d3f88174125b20c31599c3a/17f5d00e-4b1b-4b9c-b029-55c95d594f64/24",
+                "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d3f88174125b20c31599c3a/17f5d00e-4b1b-4b9c-b029-55c95d594f64/16",
+                "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d3f88174125b20c31599c3a/17f5d00e-4b1b-4b9c-b029-55c95d594f64/32"
+            },
+            "displayName": "Alexandr Cherniavskyi",
+            "active": true,
+            "timeZone": "Australia/Sydney",
+            "accountType": "atlassian"
+        },
+        "status": {
+            "self": "https://linkdigital.jira.com/rest/api/2/status/1",
+            "description": "The issue is open and ready for the assignee to start work on it.",
+            "iconUrl": "https://linkdigital.jira.com/images/icons/statuses/open.png",
+            "name": "Production backlog",
+            "id": "1",
+            "statusCategory": {
+                "self": "https://linkdigital.jira.com/rest/api/2/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "To Do"
+            }
+        },
+        "components": [],
+        "customfield_11300": null,
+        "customfield_11301": null,
+        "aggregatetimeestimate": null,
+        "creator": {
+            "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=5d3f88174125b20c31599c3a",
+            "accountId": "5d3f88174125b20c31599c3a",
+            "emailAddress": "cherniavskyi.alexandr@linkdigital.com.au",
+            "avatarUrls": {
+                "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d3f88174125b20c31599c3a/17f5d00e-4b1b-4b9c-b029-55c95d594f64/48",
+                "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d3f88174125b20c31599c3a/17f5d00e-4b1b-4b9c-b029-55c95d594f64/24",
+                "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d3f88174125b20c31599c3a/17f5d00e-4b1b-4b9c-b029-55c95d594f64/16",
+                "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d3f88174125b20c31599c3a/17f5d00e-4b1b-4b9c-b029-55c95d594f64/32"
+            },
+            "displayName": "Alexandr Cherniavskyi",
+            "active": true,
+            "timeZone": "Australia/Sydney",
+            "accountType": "atlassian"
+        },
+        "subtasks": [],
+        "reporter": {
+            "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=5d3f88174125b20c31599c3a",
+            "accountId": "5d3f88174125b20c31599c3a",
+            "emailAddress": "cherniavskyi.alexandr@linkdigital.com.au",
+            "avatarUrls": {
+                "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d3f88174125b20c31599c3a/17f5d00e-4b1b-4b9c-b029-55c95d594f64/48",
+                "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d3f88174125b20c31599c3a/17f5d00e-4b1b-4b9c-b029-55c95d594f64/24",
+                "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d3f88174125b20c31599c3a/17f5d00e-4b1b-4b9c-b029-55c95d594f64/16",
+                "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5d3f88174125b20c31599c3a/17f5d00e-4b1b-4b9c-b029-55c95d594f64/32"
+            },
+            "displayName": "Alexandr Cherniavskyi",
+            "active": true,
+            "timeZone": "Australia/Sydney",
+            "accountType": "atlassian"
+        },
+        "aggregateprogress": {
+            "progress": 529800,
+            "total": 529800,
+            "percent": 100
+        },
+        "customfield_12100": null,
+        "customfield_12500": null,
+        "customfield_12855": null,
+        "customfield_12857": null,
+        "customfield_12856": null,
+        "progress": {
+            "progress": 529800,
+            "total": 529800,
+            "percent": 100
+        },
+        "votes": {
+            "self": "https://linkdigital.jira.com/rest/api/2/issue/ST-60/votes",
+            "votes": 0,
+            "hasVoted": false
+        },
+        "worklog": {
+            "startAt": 0,
+            "maxResults": 20,
+            "total": 156,
+            "worklogs": [
+                {
+                    "self": "https://linkdigital.jira.com/rest/api/2/issue/77218/worklog/98134",
+                    "author": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "updateAuthor": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "comment": "time-tracking",
+                    "created": "2021-11-23T01:41:04.395+1100",
+                    "updated": "2021-11-23T02:59:09.652+1100",
+                    "started": "2021-11-22T22:15:00.000+1100",
+                    "timeSpent": "3h 30m",
+                    "timeSpentSeconds": 12600,
+                    "id": "98134",
+                    "issueId": "77218"
+                },
+                {
+                    "self": "https://linkdigital.jira.com/rest/api/2/issue/77218/worklog/98214",
+                    "author": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "updateAuthor": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "comment": "time-tracking",
+                    "created": "2021-11-24T01:57:06.443+1100",
+                    "updated": "2021-11-24T01:57:06.443+1100",
+                    "started": "2021-11-23T19:00:00.000+1100",
+                    "timeSpent": "4h",
+                    "timeSpentSeconds": 14400,
+                    "id": "98214",
+                    "issueId": "77218"
+                },
+                {
+                    "self": "https://linkdigital.jira.com/rest/api/2/issue/77218/worklog/98274",
+                    "author": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "updateAuthor": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "comment": "time-tracking",
+                    "created": "2021-11-25T02:43:14.664+1100",
+                    "updated": "2021-11-25T02:43:14.664+1100",
+                    "started": "2021-11-25T01:10:00.000+1100",
+                    "timeSpent": "20m",
+                    "timeSpentSeconds": 1200,
+                    "id": "98274",
+                    "issueId": "77218"
+                },
+                {
+                    "self": "https://linkdigital.jira.com/rest/api/2/issue/77218/worklog/98324",
+                    "author": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "updateAuthor": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "comment": "time-tracking",
+                    "created": "2021-11-26T02:02:01.385+1100",
+                    "updated": "2021-11-26T02:02:01.385+1100",
+                    "started": "2021-11-25T19:00:00.000+1100",
+                    "timeSpent": "1h",
+                    "timeSpentSeconds": 3600,
+                    "id": "98324",
+                    "issueId": "77218"
+                },
+                {
+                    "self": "https://linkdigital.jira.com/rest/api/2/issue/77218/worklog/98389",
+                    "author": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "updateAuthor": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "comment": "time-tracking",
+                    "created": "2021-11-27T02:37:39.389+1100",
+                    "updated": "2021-11-27T02:37:39.389+1100",
+                    "started": "2021-11-26T21:45:00.000+1100",
+                    "timeSpent": "1h",
+                    "timeSpentSeconds": 3600,
+                    "id": "98389",
+                    "issueId": "77218"
+                },
+                {
+                    "self": "https://linkdigital.jira.com/rest/api/2/issue/77218/worklog/98445",
+                    "author": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "updateAuthor": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "comment": "time-tracking",
+                    "created": "2021-11-30T04:19:19.504+1100",
+                    "updated": "2021-11-30T04:19:19.504+1100",
+                    "started": "2021-11-29T21:20:00.000+1100",
+                    "timeSpent": "30m",
+                    "timeSpentSeconds": 1800,
+                    "id": "98445",
+                    "issueId": "77218"
+                },
+                {
+                    "self": "https://linkdigital.jira.com/rest/api/2/issue/77218/worklog/98583",
+                    "author": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "updateAuthor": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "comment": "time-tracking",
+                    "created": "2021-12-02T03:40:40.541+1100",
+                    "updated": "2021-12-02T03:40:40.541+1100",
+                    "started": "2021-12-01T20:45:00.000+1100",
+                    "timeSpent": "45m",
+                    "timeSpentSeconds": 2700,
+                    "id": "98583",
+                    "issueId": "77218"
+                },
+                {
+                    "self": "https://linkdigital.jira.com/rest/api/2/issue/77218/worklog/98629",
+                    "author": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "updateAuthor": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "comment": "time-tracking",
+                    "created": "2021-12-03T04:33:11.357+1100",
+                    "updated": "2021-12-03T04:33:11.357+1100",
+                    "started": "2021-12-03T02:40:00.000+1100",
+                    "timeSpent": "2h",
+                    "timeSpentSeconds": 7200,
+                    "id": "98629",
+                    "issueId": "77218"
+                },
+                {
+                    "self": "https://linkdigital.jira.com/rest/api/2/issue/77218/worklog/98670",
+                    "author": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "updateAuthor": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "comment": "time-tracking",
+                    "created": "2021-12-04T04:11:57.639+1100",
+                    "updated": "2021-12-04T04:11:57.639+1100",
+                    "started": "2021-12-03T23:00:00.000+1100",
+                    "timeSpent": "45m",
+                    "timeSpentSeconds": 2700,
+                    "id": "98670",
+                    "issueId": "77218"
+                },
+                {
+                    "self": "https://linkdigital.jira.com/rest/api/2/issue/77218/worklog/98746",
+                    "author": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "updateAuthor": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "comment": "time-tracking",
+                    "created": "2021-12-07T04:04:28.878+1100",
+                    "updated": "2021-12-07T04:04:28.878+1100",
+                    "started": "2021-12-06T21:00:00.000+1100",
+                    "timeSpent": "2h",
+                    "timeSpentSeconds": 7200,
+                    "id": "98746",
+                    "issueId": "77218"
+                },
+                {
+                    "self": "https://linkdigital.jira.com/rest/api/2/issue/77218/worklog/98794",
+                    "author": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "updateAuthor": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "comment": "time-tracking",
+                    "created": "2021-12-08T05:09:35.487+1100",
+                    "updated": "2021-12-08T05:09:35.487+1100",
+                    "started": "2021-12-07T21:15:00.000+1100",
+                    "timeSpent": "1h",
+                    "timeSpentSeconds": 3600,
+                    "id": "98794",
+                    "issueId": "77218"
+                },
+                {
+                    "self": "https://linkdigital.jira.com/rest/api/2/issue/77218/worklog/98963",
+                    "author": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "updateAuthor": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "comment": "time-tracking",
+                    "created": "2021-12-11T02:53:33.626+1100",
+                    "updated": "2021-12-11T02:53:33.626+1100",
+                    "started": "2021-12-10T20:20:00.000+1100",
+                    "timeSpent": "3h",
+                    "timeSpentSeconds": 10800,
+                    "id": "98963",
+                    "issueId": "77218"
+                },
+                {
+                    "self": "https://linkdigital.jira.com/rest/api/2/issue/77218/worklog/99033",
+                    "author": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "updateAuthor": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "comment": "time-tracking",
+                    "created": "2021-12-14T01:51:54.042+1100",
+                    "updated": "2021-12-14T01:51:54.042+1100",
+                    "started": "2021-12-13T19:35:00.000+1100",
+                    "timeSpent": "3h 30m",
+                    "timeSpentSeconds": 12600,
+                    "id": "99033",
+                    "issueId": "77218"
+                },
+                {
+                    "self": "https://linkdigital.jira.com/rest/api/2/issue/77218/worklog/99136",
+                    "author": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "updateAuthor": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "comment": "time-tracking",
+                    "created": "2021-12-16T02:49:47.287+1100",
+                    "updated": "2021-12-16T02:49:47.287+1100",
+                    "started": "2021-12-15T20:00:00.000+1100",
+                    "timeSpent": "2h 30m",
+                    "timeSpentSeconds": 9000,
+                    "id": "99136",
+                    "issueId": "77218"
+                },
+                {
+                    "self": "https://linkdigital.jira.com/rest/api/2/issue/77218/worklog/99177",
+                    "author": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "updateAuthor": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "comment": "time-tracking",
+                    "created": "2021-12-17T00:22:57.556+1100",
+                    "updated": "2021-12-17T00:22:57.556+1100",
+                    "started": "2021-12-16T20:20:00.000+1100",
+                    "timeSpent": "1h",
+                    "timeSpentSeconds": 3600,
+                    "id": "99177",
+                    "issueId": "77218"
+                },
+                {
+                    "self": "https://linkdigital.jira.com/rest/api/2/issue/77218/worklog/99929",
+                    "author": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "updateAuthor": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "comment": "time-tracking",
+                    "created": "2022-01-20T03:26:17.732+1100",
+                    "updated": "2022-01-20T03:26:17.732+1100",
+                    "started": "2022-01-19T21:30:00.000+1100",
+                    "timeSpent": "15m",
+                    "timeSpentSeconds": 900,
+                    "id": "99929",
+                    "issueId": "77218"
+                },
+                {
+                    "self": "https://linkdigital.jira.com/rest/api/2/issue/77218/worklog/99992",
+                    "author": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "updateAuthor": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "comment": "time-tracking",
+                    "created": "2022-01-21T21:40:35.795+1100",
+                    "updated": "2022-01-21T21:40:35.795+1100",
+                    "started": "2022-01-21T00:20:00.000+1100",
+                    "timeSpent": "2h",
+                    "timeSpentSeconds": 7200,
+                    "id": "99992",
+                    "issueId": "77218"
+                },
+                {
+                    "self": "https://linkdigital.jira.com/rest/api/2/issue/77218/worklog/100074",
+                    "author": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "updateAuthor": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "comment": "time-tracking",
+                    "created": "2022-01-25T06:48:58.529+1100",
+                    "updated": "2022-01-25T06:48:58.529+1100",
+                    "started": "2022-01-24T19:15:00.000+1100",
+                    "timeSpent": "2h 30m",
+                    "timeSpentSeconds": 9000,
+                    "id": "100074",
+                    "issueId": "77218"
+                },
+                {
+                    "self": "https://linkdigital.jira.com/rest/api/2/issue/77218/worklog/100243",
+                    "author": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "updateAuthor": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "comment": "time-tracking",
+                    "created": "2022-01-31T03:18:55.373+1100",
+                    "updated": "2022-01-31T03:18:55.373+1100",
+                    "started": "2022-01-28T19:20:00.000+1100",
+                    "timeSpent": "20m",
+                    "timeSpentSeconds": 1200,
+                    "id": "100243",
+                    "issueId": "77218"
+                },
+                {
+                    "self": "https://linkdigital.jira.com/rest/api/2/issue/77218/worklog/100309",
+                    "author": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "updateAuthor": {
+                        "self": "https://linkdigital.jira.com/rest/api/2/user?accountId=557058%3A295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "accountId": "557058:295406f3-a1fc-4733-b906-dd15d021bd79",
+                        "avatarUrls": {
+                            "48x48": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "24x24": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "16x16": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png",
+                            "32x32": "https://secure.gravatar.com/avatar/182fc208a1a2e6cc41393ab6c9363d9c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FTT-6.png"
+                        },
+                        "displayName": "Tempo Timesheets",
+                        "active": true,
+                        "timeZone": "Australia/Sydney",
+                        "accountType": "app"
+                    },
+                    "comment": "time-tracking",
+                    "created": "2022-02-01T08:58:47.432+1100",
+                    "updated": "2022-02-01T08:58:47.432+1100",
+                    "started": "2022-01-31T20:50:00.000+1100",
+                    "timeSpent": "1h",
+                    "timeSpentSeconds": 3600,
+                    "id": "100309",
+                    "issueId": "77218"
+                }
+            ]
+        },
+        "issuetype": {
+            "self": "https://linkdigital.jira.com/rest/api/2/issuetype/3",
+            "id": "3",
+            "description": "A task that needs to be done.",
+            "iconUrl": "https://linkdigital.jira.com/rest/api/2/universal_avatar/view/type/issuetype/avatar/11418?size=medium",
+            "name": "Task",
+            "subtask": false,
+            "avatarId": 11418,
+            "hierarchyLevel": 0
+        },
+        "timespent": 529800,
+        "project": {
+            "self": "https://linkdigital.jira.com/rest/api/2/project/22043",
+            "id": "22043",
+            "key": "ST",
+            "name": "Staff training",
+            "projectTypeKey": "software",
+            "simplified": false,
+            "avatarUrls": {
+                "48x48": "https://linkdigital.jira.com/rest/api/2/universal_avatar/view/type/project/avatar/14529",
+                "24x24": "https://linkdigital.jira.com/rest/api/2/universal_avatar/view/type/project/avatar/14529?size=small",
+                "16x16": "https://linkdigital.jira.com/rest/api/2/universal_avatar/view/type/project/avatar/14529?size=xsmall",
+                "32x32": "https://linkdigital.jira.com/rest/api/2/universal_avatar/view/type/project/avatar/14529?size=medium"
+            },
+            "projectCategory": {
+                "self": "https://linkdigital.jira.com/rest/api/2/projectCategory/10900",
+                "id": "10900",
+                "description": "Hours associated to administration tasks that are not related to a project with defined scope and budget",
+                "name": "Internal / Not Chargeable"
+            }
+        },
+        "customfield_11000": null,
+        "customfield_12851": [],
+        "aggregatetimespent": 529800,
+        "customfield_12850": null,
+        "customfield_11400": null,
+        "customfield_12852": null,
+        "customfield_12844": null,
+        "customfield_12843": null,
+        "customfield_10700": null,
+        "customfield_12846": null,
+        "customfield_12845": null,
+        "customfield_12848": null,
+        "customfield_12847": null,
+        "resolutiondate": null,
+        "customfield_12849": null,
+        "workratio": -1,
+        "watches": {
+            "self": "https://linkdigital.jira.com/rest/api/2/issue/ST-60/watchers",
+            "watchCount": 1,
+            "isWatching": true
+        },
+        "created": "2021-11-23T01:40:37.187+1100",
+        "customfield_12200": null,
+        "customfield_12840": null,
+        "customfield_12842": null,
+        "customfield_12600": [],
+        "customfield_12841": null,
+        "customfield_11900": [],
+        "customfield_12837": null,
+        "customfield_11901": null,
+        "customfield_12839": null,
+        "customfield_12838": null,
+        "updated": "2025-04-04T17:59:34.023+1100",
+        "timeoriginalestimate": null,
+        "description": null,
+        "customfield_11500": null,
+        "timetracking": {
+            "timeSpent": "3w 3d 3h 10m",
+            "timeSpentSeconds": 529800
+        },
+        "customfield_12822": null,
+        "customfield_12701": null,
+        "customfield_12821": null,
+        "customfield_12700": null,
+        "customfield_12824": null,
+        "security": null,
+        "customfield_12703": null,
+        "customfield_12823": null,
+        "customfield_12702": null,
+        "customfield_12826": null,
+        "customfield_12705": null,
+        "attachment": [],
+        "customfield_12704": null,
+        "customfield_12828": null,
+        "customfield_12706": null,
+        "customfield_12827": null,
+        "summary": "Mentoring",
+        "customfield_12300": {
+            "hasEpicLinkFieldDependency": false,
+            "showField": false,
+            "nonEditableReason": {
+                "reason": "PLUGIN_LICENSE_ERROR",
+                "message": "The Parent Link is only available to Jira Premium users."
+            }
+        },
+        "customfield_10400": null,
+        "customfield_12811": null,
+        "customfield_12813": null,
+        "customfield_12812": null,
+        "customfield_12815": null,
+        "customfield_12814": null,
+        "customfield_12817": null,
+        "duedate": null,
+        "customfield_12819": null,
+        "customfield_12818": null,
+        "comment": {
+            "comments": [],
+            "self": "https://linkdigital.jira.com/rest/api/2/issue/77218/comment",
+            "maxResults": 0,
+            "total": 0,
+            "startAt": 0
+        }
+    }
+}
