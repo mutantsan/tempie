@@ -7,6 +7,10 @@ authors = ["Oleksandr Cherniavskiy <mutantsan@gmail.com>"]
 repository = "https://github.com/mutantsan/tempie"
 license = "MIT"
 
+[lib]
+name = "tempie"
+path = "src/lib.rs"
+
 [dependencies]
 reqwest = { version = "0.12.15", features = ["json"] }
 tokio = { version = "1", features = ["full"] }
@@ -25,3 +29,7 @@ spinners = "4.1.1"
 [[bin]]
 name = "tempie"
 path = "src/main.rs"
+
+[dev-dependencies]
+assert_cmd = "2.0"
+predicates = "3.1"

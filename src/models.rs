@@ -1,5 +1,14 @@
 use serde::{Deserialize, Serialize};
 
+#[derive(Serialize, Deserialize, Debug)]
+pub struct UserCredentials {
+    pub url: String,
+    pub account_id: String,
+    pub tempo_token: String,
+    pub jira_token: String,
+    pub jira_email: String,
+}
+
 #[derive(Debug, Deserialize)]
 pub struct UserWorklogsResponse {
     pub results: Vec<WorklogItem>,

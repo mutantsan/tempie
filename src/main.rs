@@ -49,7 +49,10 @@ async fn main() {
     match cli.command {
         Commands::Setup => setup(),
         Commands::List { from_date, to_date } => {
-            ensure_credentials_exist();
+            if let Err(err) = ensure_credentials_exist(None) {
+                eprintln!("{}", err);
+                std::process::exit(1);
+            }
             list(&from_date, &to_date).await
         }
         Commands::Log {
@@ -57,11 +60,17 @@ async fn main() {
             time_spent,
             comment,
         } => {
-            ensure_credentials_exist();
+            if let Err(err) = ensure_credentials_exist(None) {
+                eprintln!("{}", err);
+                std::process::exit(1);
+            }
             log_time(&issue_key, &time_spent, comment).await
         }
         Commands::Delete { worklog_id } => {
-            ensure_credentials_exist();
+            if let Err(err) = ensure_credentials_exist(None) {
+                eprintln!("{}", err);
+                std::process::exit(1);
+            }
             delete_log(&worklog_id).await
         }
     }

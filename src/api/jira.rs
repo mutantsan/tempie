@@ -28,8 +28,7 @@ pub async fn get_jira_issue(issue_or_key: &str) -> Result<JiraIssue, String> {
         id: json_data.id,
     };
 
-    storage.store_jira_issue(&issue.key.as_str(), &issue);
-    storage.store_jira_issue(&issue.id.as_str(), &issue);
+    storage.store_jira_issue(&issue);
 
     Ok(issue)
 }

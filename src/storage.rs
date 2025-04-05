@@ -1,20 +1,11 @@
-use serde::{Deserialize, Serialize};
 use serde_json;
 use sled;
 use std::sync::OnceLock;
 
-use crate::models::JiraIssue;
+use crate::models::{JiraIssue, UserCredentials};
 
-static DB_INSTANCE: OnceLock<sled::Db> = OnceLock::new();
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct UserCredentials {
-    pub url: String,
-    pub account_id: String,
-    pub tempo_token: String,
-    pub jira_token: String,
-    pub jira_email: String,
-}
+static DB_INSTANCE: OnceLock<sled::Result<sled::Db>> = OnceLock::new();
+pub const DEFAULT_DATABASE_PATH: &str = "tempie.db";
 
 pub struct Storage {
     db: sled::Db,
@@ -22,20 +13,29 @@ pub struct Storage {
 
 impl Storage {
     pub fn new() -> Self {
-        let db = DB_INSTANCE
-            .get_or_init(|| sled::open("tempie.db").expect("Failed to open sled database"))
-            .clone();
+        Self::with_path(DEFAULT_DATABASE_PATH)
+    }
 
-        Self { db }
+    pub fn with_path(path: &str) -> Self {
+        // we need lock, because we often close/open connection to the database
+        let db = DB_INSTANCE.get_or_init(|| sled::open(path));
+
+        if let Ok(db) = db {
+            Self { db: db.clone() }
+        } else {
+            panic!("The database is busy. You should wait for the previous operation to complete.");
+        }
     }
 
     // Store Jira credentials
-    pub fn store_credentials(&self, creds: &UserCredentials) {
-        let serialized = serde_json::to_string(creds).unwrap();
+    pub fn store_credentials(&self, creds: UserCredentials) -> UserCredentials {
+        let serialized = serde_json::to_string(&creds).unwrap();
         self.db
             .insert("jira_credentials", serialized.as_bytes())
             .unwrap();
         self.db.flush().unwrap();
+
+        creds
     }
 
     // Get Jira credentials
@@ -48,10 +48,21 @@ impl Storage {
     }
 
     // Store jira issue info
-    pub fn store_jira_issue(&self, key: &str, value: &JiraIssue) {
+    pub fn store_jira_issue(&self, issue: &JiraIssue) {
         self.db
-            .insert(key, serde_json::to_string(value).unwrap().as_bytes())
+            .insert(
+                issue.id.as_str(),
+                serde_json::to_string(issue).unwrap().as_bytes(),
+            )
             .unwrap();
+
+        self.db
+            .insert(
+                issue.key.as_str(),
+                serde_json::to_string(issue).unwrap().as_bytes(),
+            )
+            .unwrap();
+
         self.db.flush().unwrap();
     }
 

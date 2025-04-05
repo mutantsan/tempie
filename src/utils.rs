@@ -1,4 +1,4 @@
-use crate::storage::Storage;
+use crate::storage::{DEFAULT_DATABASE_PATH, Storage};
 use chrono::{Datelike, Local, NaiveDate, Weekday};
 use humantime::parse_duration;
 
@@ -7,6 +7,10 @@ const SECONDS_PER_HOUR: i32 = 3600;
 
 // Parse a duration from a string. hours:minutes -> seconds
 pub fn parse_duration_from_string(duration_str: &str) -> i32 {
+    if duration_str.is_empty() {
+        return 0;
+    }
+
     parse_duration(duration_str).unwrap().as_secs() as i32
 }
 
@@ -54,7 +58,7 @@ pub fn working_seconds_in_current_month() -> i32 {
 }
 
 // Check if a day is a weekend
-fn is_weekend(weekday: Weekday) -> bool {
+pub fn is_weekend(weekday: Weekday) -> bool {
     weekday == Weekday::Sat || weekday == Weekday::Sun
 }
 
@@ -71,12 +75,17 @@ pub fn today_as_iso8601() -> String {
 }
 
 // Ensure credentials exist and exit if they don't
-pub fn ensure_credentials_exist() -> () {
-    let storage = Storage::new();
+pub fn ensure_credentials_exist(mut database_path: Option<&str>) -> Result<(), String> {
+    if database_path.is_none() {
+        database_path = Some(DEFAULT_DATABASE_PATH);
+    }
+
+    let storage = Storage::with_path(database_path.unwrap());
     let config = storage.get_credentials();
 
-    if !config.is_some() {
-        eprintln!("Credentials are not set up. Please run `tempie setup` first.");
-        std::process::exit(1);
+    if config.is_none() {
+        return Err("Credentials are not set up. Please run `tempie setup` first.".to_string());
     }
+
+    Ok(())
 }

@@ -1,4 +1,5 @@
-use crate::storage::{Storage, UserCredentials};
+use crate::storage::Storage;
+use crate::models::UserCredentials;
 use dialoguer::{Input, Password};
 
 const JIRA_API_TOKENS_URL: &str = "https://id.atlassian.com/manage-profile/security/api-tokens";
@@ -17,7 +18,7 @@ pub fn setup() {
     let jira_token = get_jira_token();
     let jira_email = get_jira_email();
 
-    storage.store_credentials(&UserCredentials {
+    storage.store_credentials(UserCredentials {
         url: jira_url.clone(),
         account_id,
         tempo_token,
