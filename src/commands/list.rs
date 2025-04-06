@@ -1,5 +1,5 @@
 use crate::api::{ApiClient, ApiTrait};
-use crate::models::WorklogItem;
+use crate::models::{UserCredentials, WorklogItem};
 use crate::storage::Storage;
 use crate::utils;
 
@@ -38,26 +38,69 @@ fn build_table(
     let config = storage.get_credentials().unwrap();
     let worked_seconds_this_month = calculate_total_time(&worklogs);
     let working_seconds_in_current_month = utils::working_seconds_in_current_month();
+    let filtered_worklogs = filter_out_worklogs_by_date(&worklogs, from_date, to_date);
     let mut builder = Builder::default();
     let mut total_time = 0;
 
+    add_header_rows(
+        &mut builder,
+        worked_seconds_this_month,
+        working_seconds_in_current_month,
+        from_date,
+        to_date,
+    );
+    add_column_headers(&mut builder);
+    add_worklog_rows(&mut builder, &filtered_worklogs, &config, &mut total_time);
+    add_footer_row(&mut builder, total_time);
+
+    let mut table = builder.build();
+    apply_table_formatting(&mut table);
+
+    table
+}
+
+fn add_header_rows(
+    builder: &mut Builder,
+    worked_seconds: i32,
+    working_seconds: i32,
+    from_date: &str,
+    to_date: &str,
+) {
     builder.push_record(vec![
         format!(
             "{} {}/{} (-{})",
             utils::current_month_name(),
-            utils::format_duration(worked_seconds_this_month),
-            utils::format_duration(working_seconds_in_current_month),
-            utils::format_duration(working_seconds_in_current_month - worked_seconds_this_month)
+            utils::format_duration(worked_seconds),
+            utils::format_duration(working_seconds),
+            utils::format_duration(working_seconds - worked_seconds)
         )
         .as_str(),
     ]);
 
     if from_date != to_date {
-        builder.push_record(vec![format!("{} - {}", from_date, to_date).as_str()]);
+        builder.push_record(vec![
+            format!(
+                "{} ({}) - {} ({})",
+                utils::get_day_name_from_iso8601(from_date),
+                from_date,
+                utils::get_day_name_from_iso8601(to_date),
+                to_date
+            )
+            .as_str(),
+        ]);
     } else {
-        builder.push_record(vec![format!("{}", from_date).as_str()]);
+        builder.push_record(vec![
+            format!(
+                "{} ({})",
+                utils::get_day_name_from_iso8601(from_date),
+                from_date
+            )
+            .as_str(),
+        ]);
     }
+}
 
+fn add_column_headers(builder: &mut Builder) {
     builder.push_record(vec![
         "ID",
         "Duration",
@@ -65,9 +108,16 @@ fn build_table(
         "Description",
         "Issue URL",
     ]);
+}
 
-    for worklog in filter_out_worklogs_by_date(&worklogs, &from_date, &to_date) {
-        total_time += worklog.time_spent_seconds;
+fn add_worklog_rows(
+    builder: &mut Builder,
+    worklogs: &Vec<&WorklogItem>,
+    config: &UserCredentials,
+    total_time: &mut i32,
+) {
+    for worklog in worklogs {
+        *total_time += worklog.time_spent_seconds;
 
         builder.push_record(vec![
             worklog.tempo_worklog_id.to_string(),
@@ -84,13 +134,15 @@ fn build_table(
             ),
         ]);
     }
+}
 
+fn add_footer_row(builder: &mut Builder, total_time: i32) {
     builder.push_record(vec![
         format!("{}/8h", utils::format_duration(total_time)).as_str(),
     ]);
+}
 
-    let mut table = builder.build();
-
+fn apply_table_formatting(table: &mut Table) {
     table.modify(Rows::first(), Span::column(5));
     table.modify(Rows::single(1), Span::column(5));
     table.modify(Rows::last(), Span::column(5));
@@ -98,8 +150,6 @@ fn build_table(
     table.modify(Rows::first(), Alignment::center());
     table.modify(Rows::single(1), Alignment::center());
     table.modify(Rows::last(), Alignment::right());
-
-    table
 }
 
 // Calculate the total time spent in seconds this month

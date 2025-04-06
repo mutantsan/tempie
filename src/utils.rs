@@ -91,6 +91,12 @@ pub fn today_as_iso8601() -> String {
     today
 }
 
+// Get the day name from an ISO 8601 date string, e.g "2025-04-06" -> "Sunday"
+pub fn get_day_name_from_iso8601(date_string: &str) -> String {
+    let date = NaiveDate::parse_from_str(date_string, "%Y-%m-%d").unwrap();
+    date.format("%A").to_string()
+}
+
 // Ensure credentials exist and exit if they don't
 pub fn ensure_credentials_exist(storage: &Storage) -> Result<(), String> {
     let config = storage.get_credentials();
@@ -228,5 +234,13 @@ mod tests {
     fn test_current_month_last_day() {
         let last_day = current_month_last_day();
         assert!(test_date_string_format(&last_day).is_ok());
+    }
+
+    #[test]
+    fn test_get_day_name_from_iso8601() {
+        assert_eq!(get_day_name_from_iso8601("2025-04-06"), "Sunday");
+        assert_eq!(get_day_name_from_iso8601("2025-04-07"), "Monday");
+        assert_eq!(get_day_name_from_iso8601("2025-04-09"), "Wednesday");
+        assert_eq!(get_day_name_from_iso8601("2025-04-11"), "Friday");
     }
 }
