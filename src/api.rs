@@ -88,32 +88,52 @@ impl ApiTrait for ApiClient {
         from_date: &str,
         to_date: &str,
     ) -> Result<Vec<WorklogItem>, String> {
-        let response = self
-            .client
-            .get(format!(
-                "{}/worklogs/user/{}",
-                TEMPO_BASE_URL, self.config.account_id
-            ))
-            .bearer_auth(&self.config.tempo_token)
-            .query(&[("from", from_date), ("to", to_date)])
-            .send()
-            .await
-            .map_err(|e| format!("Request error: {}", e))?;
+        let mut worklogs: Vec<WorklogItem> = Vec::new();
 
-        if !response.status().is_success() {
-            return Err(format!("Failed to fetch worklogs: {}", response.status()));
+        let mut offset = 0;
+        let limit = 50;
+
+        loop {
+            let response = self
+                .client
+                .get(format!(
+                    "{}/worklogs/user/{}",
+                    TEMPO_BASE_URL, self.config.account_id
+                ))
+                .bearer_auth(&self.config.tempo_token)
+                .query(&[
+                    ("from", from_date),
+                    ("to", to_date),
+                    ("offset", offset.to_string().as_str()),
+                ])
+                .send()
+                .await
+                .map_err(|e| format!("Request error: {}", e))?;
+
+            if !response.status().is_success() {
+                return Err(format!("Failed to fetch worklogs: {}", response.status()));
+            }
+
+            let mut json_data: UserWorklogsResponse = response
+                .json()
+                .await
+                .map_err(|e| format!("Failed to parse JSON: {}", e))?;
+
+            for worklog in json_data.results.iter_mut() {
+                worklog.jira_issue =
+                    Some(self.get_jira_issue(&worklog.issue.id.to_string()).await?);
+            }
+
+            if json_data.results.is_empty() {
+                break;
+            }
+
+            worklogs.extend(json_data.results);
+
+            offset += limit;
         }
 
-        let mut json_data: UserWorklogsResponse = response
-            .json()
-            .await
-            .map_err(|e| format!("Failed to parse JSON: {}", e))?;
-
-        for worklog in json_data.results.iter_mut() {
-            worklog.jira_issue = Some(self.get_jira_issue(&worklog.issue.id.to_string()).await?);
-        }
-
-        Ok(json_data.results)
+        Ok(worklogs)
     }
 
     // Delete a worklog by its ID

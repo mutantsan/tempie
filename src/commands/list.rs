@@ -15,8 +15,13 @@ pub async fn list(api: &ApiClient, from_date: &str, to_date: &str) {
     let mut spinner = Spinner::new(Spinners::Dots, "Retrieving worklogs...".to_string());
     let first_day = utils::current_month_first_day();
     let last_day = utils::current_month_last_day();
+    let mut retrieve_start_date = first_day.to_string();
 
-    match api.list_worklogs(&first_day, &last_day).await {
+    if from_date.to_string() < first_day {
+        retrieve_start_date = from_date.to_string();
+    }
+
+    match api.list_worklogs(&retrieve_start_date, &last_day).await {
         Ok(worklogs) => {
             spinner.stop_with_message(format!(
                 "\n{}",
