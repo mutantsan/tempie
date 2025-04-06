@@ -15,7 +15,7 @@ pub trait ApiTrait {
         comment: Option<String>,
     ) -> Result<WorklogItem, String>;
     async fn list_worklogs(&self, from: &str, to: &str) -> Result<Vec<WorklogItem>, String>;
-    async fn delete_worklog(&self, id: &str) -> Result<(), String>;
+    async fn delete_worklogs(&self, ids: &Vec<String>) -> Result<(), String>;
     async fn get_jira_issue(&self, issue_or_key: &str) -> Result<JiraIssue, String>;
 }
 
@@ -117,20 +117,26 @@ impl ApiTrait for ApiClient {
     }
 
     // Delete a worklog by its ID
-    async fn delete_worklog(&self, worklog_id: &str) -> Result<(), String> {
-        let response = self
-            .client
-            .delete(&format!("{}/worklogs/{}", TEMPO_BASE_URL, worklog_id))
-            .bearer_auth(&self.config.tempo_token)
-            .json(&serde_json::json!({
-                "id": worklog_id
-            }))
-            .send()
-            .await
-            .map_err(|e| format!("Request error: {}", e))?;
+    async fn delete_worklogs(&self, worklog_ids: &Vec<String>) -> Result<(), String> {
+        for worklog_id in worklog_ids {
+            let response = self
+                .client
+                .delete(&format!("{}/worklogs/{}", TEMPO_BASE_URL, worklog_id))
+                .bearer_auth(&self.config.tempo_token)
+                .json(&serde_json::json!({
+                    "id": worklog_id
+                }))
+                .send()
+                .await
+                .map_err(|e| format!("Request error: {}", e))?;
 
-        if response.status() != StatusCode::NO_CONTENT {
-            return Err(format!("Failed to delete worklog: {}", response.status()));
+            if response.status() != StatusCode::NO_CONTENT {
+                return Err(format!(
+                    "Failed to delete worklog {}: {}",
+                    worklog_id,
+                    response.status()
+                ));
+            }
         }
 
         Ok(())

@@ -54,10 +54,10 @@ tempie list 2024-03-01 2024-03-31
 
 ### Delete Worklog
 
-Remove a worklog by its ID:
+Remove a worklog by its ID(s). You can provide one or more IDs:
 
 ```bash
-tempie delete 12345
+tempie delete 12345 67890
 ```
 
 You can get the ID from the `list` command.

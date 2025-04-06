@@ -37,8 +37,8 @@ enum Commands {
     },
     /// Delete worklog
     Delete {
-        #[arg(help = "Worklog ID to delete")]
-        worklog_id: String,
+        #[arg(help = "Worklog ID to delete", num_args = 1..)]
+        worklog_ids: Vec<String>,
     },
 }
 
@@ -67,12 +67,12 @@ async fn main() {
             }
             log_time(&api, &issue_key, &time_spent, comment).await
         }
-        Commands::Delete { worklog_id } => {
+        Commands::Delete { worklog_ids } => {
             if let Err(err) = ensure_credentials_exist(&api.storage) {
                 eprintln!("{}", err);
                 std::process::exit(1);
             }
-            delete_log(&api, &worklog_id).await
+            delete_log(&api, &worklog_ids).await
         }
     }
 }
