@@ -2,15 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.3.2] - 2025-04-04
+## [0.3.3] - 2025-04-06
 
 ### 🚜 Refactor
 
 - Refactor setup command, improve credential validation
+- Get rid of database lock, rework tests, create api client and pass it from main
 
 ### 📚 Documentation
 
 - Write readme
+
+### 🧪 Testing
+
+- Write storage and utils tests, small refactoring
 
 ## [0.3.0] - 2025-04-04
 
