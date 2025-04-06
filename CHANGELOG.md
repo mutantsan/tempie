@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2025-04-06
+
+### 🚀 Features
+
+- Update list command to calculate total worked hours and missing hours
+
+### 📚 Documentation
+
+- Update changelog
+
 ## [0.3.3] - 2025-04-06
 
 ### 🚜 Refactor
