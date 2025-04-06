@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] - 2025-04-06
+
+### 🚀 Features
+
+- Rework delete command to support multiple IDs
+
 ## [0.4.1] - 2025-04-06
 
 ### 🚜 Refactor
