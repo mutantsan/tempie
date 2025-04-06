@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.1] - 2025-04-06
+
+### 🐛 Bug Fixes
+
+- Fix worklog list api call to support pagination
+
 ## [0.5.0] - 2025-04-06
 
 ### 🚀 Features
