@@ -6,6 +6,7 @@ mod utils;
 
 use crate::commands::{delete_log, list, log_time, setup};
 use crate::utils::{ensure_credentials_exist, today_as_iso8601};
+use crate::storage::Storage;
 use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
@@ -45,34 +46,28 @@ enum Commands {
 #[tokio::main]
 async fn main() {
     let cli = Cli::parse();
-    let api = api::ApiClient::new();
+    let storage = Storage::new();
 
     match cli.command {
-        Commands::Setup => setup(&api),
-        Commands::List { from_date, to_date } => {
-            if let Err(err) = ensure_credentials_exist(&api.storage) {
-                eprintln!("{}", err);
-                std::process::exit(1);
-            }
-            list(&api, &from_date, &to_date).await
-        }
+        Commands::Setup => setup(&storage),
+        _ => {}
+    }
+
+    if  let Err(err) = ensure_credentials_exist(&storage) {
+        eprintln!("{}", err);
+        std::process::exit(1);
+    }
+
+    let api = api::ApiClient::new(storage);
+
+    match cli.command {
+        Commands::Setup => {}
+        Commands::List { from_date, to_date } => list(&api, &from_date, &to_date).await,
         Commands::Log {
             issue_key,
             time_spent,
             comment,
-        } => {
-            if let Err(err) = ensure_credentials_exist(&api.storage) {
-                eprintln!("{}", err);
-                std::process::exit(1);
-            }
-            log_time(&api, &issue_key, &time_spent, comment).await
-        }
-        Commands::Delete { worklog_ids } => {
-            if let Err(err) = ensure_credentials_exist(&api.storage) {
-                eprintln!("{}", err);
-                std::process::exit(1);
-            }
-            delete_log(&api, &worklog_ids).await
-        }
+        } => log_time(&api, &issue_key, &time_spent, comment).await,
+        Commands::Delete { worklog_ids } => delete_log(&api, &worklog_ids).await,
     }
 }

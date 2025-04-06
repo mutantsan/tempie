@@ -1,6 +1,6 @@
 [package]
 name = "tempie"
-version = "0.5.1"
+version = "0.5.2"
 edition = "2024"
 description = "Jira time tracking CLI tool"
 authors = ["Oleksandr Cherniavskiy <mutantsan@gmail.com>"]
@@ -26,6 +26,7 @@ tabled = "0.18.0"
 humantime = "2.2"
 spinners = "4.1.1"
 async-trait = "0.1"
+futures = "0.3"
 
 [[bin]]
 name = "tempie"

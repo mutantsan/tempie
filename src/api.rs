@@ -26,8 +26,7 @@ pub struct ApiClient {
 }
 
 impl ApiClient {
-    pub fn new() -> Self {
-        let storage = Storage::new();
+    pub fn new(storage: Storage) -> Self {
         let config = storage.get_credentials().unwrap();
 
         Self {
