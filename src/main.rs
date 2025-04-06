@@ -45,33 +45,34 @@ enum Commands {
 #[tokio::main]
 async fn main() {
     let cli = Cli::parse();
+    let api = api::ApiClient::new();
 
     match cli.command {
-        Commands::Setup => setup(),
+        Commands::Setup => setup(&api),
         Commands::List { from_date, to_date } => {
-            if let Err(err) = ensure_credentials_exist(None) {
+            if let Err(err) = ensure_credentials_exist(&api.storage) {
                 eprintln!("{}", err);
                 std::process::exit(1);
             }
-            list(&from_date, &to_date).await
+            list(&api, &from_date, &to_date).await
         }
         Commands::Log {
             issue_key,
             time_spent,
             comment,
         } => {
-            if let Err(err) = ensure_credentials_exist(None) {
+            if let Err(err) = ensure_credentials_exist(&api.storage) {
                 eprintln!("{}", err);
                 std::process::exit(1);
             }
-            log_time(&issue_key, &time_spent, comment).await
+            log_time(&api, &issue_key, &time_spent, comment).await
         }
         Commands::Delete { worklog_id } => {
-            if let Err(err) = ensure_credentials_exist(None) {
+            if let Err(err) = ensure_credentials_exist(&api.storage) {
                 eprintln!("{}", err);
                 std::process::exit(1);
             }
-            delete_log(&worklog_id).await
+            delete_log(&api, &worklog_id).await
         }
     }
 }

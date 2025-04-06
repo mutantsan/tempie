@@ -1,11 +1,7 @@
 use serde_json;
 use sled;
-use std::sync::OnceLock;
 
 use crate::models::{JiraIssue, UserCredentials};
-
-static DB_INSTANCE: OnceLock<sled::Result<sled::Db>> = OnceLock::new();
-pub const DEFAULT_DATABASE_PATH: &str = "tempie.db";
 
 pub struct Storage {
     db: sled::Db,
@@ -13,18 +9,18 @@ pub struct Storage {
 
 impl Storage {
     pub fn new() -> Self {
-        Self::with_path(DEFAULT_DATABASE_PATH)
+        Self::with_path("tempie.db")
     }
 
     pub fn with_path(path: &str) -> Self {
-        // we need lock, because we often close/open connection to the database
-        let db = DB_INSTANCE.get_or_init(|| sled::open(path));
+        let db = sled::open(path).unwrap_or_else(|e| {
+            if e.to_string().contains("lock file") {
+                panic!("Database is already in use. Please wait other command to finish.");
+            }
+            panic!("Failed to open sled DB: {}", e);
+        });
 
-        if let Ok(db) = db {
-            Self { db: db.clone() }
-        } else {
-            panic!("The database is busy. You should wait for the previous operation to complete.");
-        }
+        Self { db }
     }
 
     // Store Jira credentials
@@ -73,5 +69,117 @@ impl Storage {
             .ok()
             .flatten()
             .and_then(|v| serde_json::from_slice(&v).ok())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    use std::fs;
+
+    fn cleanup_test_db(path: &str) {
+        let _ = fs::remove_dir_all(path);
+    }
+
+    fn create_test_credentials() -> UserCredentials {
+        UserCredentials {
+            url: "https://test.atlassian.net".to_string(),
+            account_id: "test123".to_string(),
+            tempo_token: "test-tempo-token".to_string(),
+            jira_token: "test-jira-token".to_string(),
+            jira_email: "test@example.com".to_string(),
+        }
+    }
+
+    #[test]
+    fn test_storage_credentials() {
+        let test_db_path = "test_storage_credentials";
+        cleanup_test_db(test_db_path);
+        let storage = Storage::with_path(test_db_path);
+
+        // Test that initially there are no credentials
+        assert!(storage.get_credentials().is_none());
+
+        let test_creds = storage.store_credentials(create_test_credentials());
+
+        let retrieved_creds = storage
+            .get_credentials()
+            .expect("Failed to get credentials");
+
+        assert_eq!(retrieved_creds.url, test_creds.url);
+        assert_eq!(retrieved_creds.account_id, test_creds.account_id);
+        assert_eq!(retrieved_creds.tempo_token, test_creds.tempo_token);
+        assert_eq!(retrieved_creds.jira_token, test_creds.jira_token);
+        assert_eq!(retrieved_creds.jira_email, test_creds.jira_email);
+
+        cleanup_test_db(test_db_path);
+    }
+
+    #[test]
+    fn test_storage_jira_issue() {
+        let test_db_path = "test_storage_jira_issue";
+        cleanup_test_db(test_db_path);
+        let storage = Storage::with_path(test_db_path);
+        let test_issue = JiraIssue {
+            id: "12345".to_string(),
+            key: "TEST-123".to_string(),
+        };
+
+        assert!(storage.get_jira_issue(&test_issue.key).is_none());
+        assert!(storage.get_jira_issue(&test_issue.id).is_none());
+
+        storage.store_jira_issue(&test_issue);
+        storage.store_jira_issue(&test_issue);
+
+        // Verify stored issue can be retrieved by key
+        let retrieved_by_key = storage
+            .get_jira_issue(&test_issue.key)
+            .expect("Failed to get issue by key");
+
+        assert_eq!(retrieved_by_key.id, test_issue.id);
+        assert_eq!(retrieved_by_key.key, test_issue.key);
+
+        // Verify stored issue can be retrieved by ID
+        let retrieved_by_id = storage
+            .get_jira_issue(&test_issue.id)
+            .expect("Failed to get issue by id");
+
+        assert_eq!(retrieved_by_id.id, test_issue.id);
+        assert_eq!(retrieved_by_id.key, test_issue.key);
+
+        let _ = fs::remove_dir_all(test_db_path);
+    }
+
+    #[test]
+    fn test_storage_overwrite() {
+        let test_db_path = "test_storage_overwrite";
+        cleanup_test_db(test_db_path);
+        let storage = Storage::with_path(test_db_path);
+
+        storage.store_credentials(create_test_credentials());
+
+        // Create and store new credentials
+        let new_creds = UserCredentials {
+            url: "https://new.atlassian.net".to_string(),
+            account_id: "new456".to_string(),
+            tempo_token: "new-tempo-token".to_string(),
+            jira_token: "new-jira-token".to_string(),
+            jira_email: "new@example.com".to_string(),
+        };
+        let new_creds = storage.store_credentials(new_creds);
+
+        // Verify that new credentials overwrote the old ones
+        let retrieved_creds = storage
+            .get_credentials()
+            .expect("Failed to get credentials");
+
+        assert_eq!(retrieved_creds.url, new_creds.url);
+        assert_eq!(retrieved_creds.account_id, new_creds.account_id);
+        assert_eq!(retrieved_creds.tempo_token, new_creds.tempo_token);
+        assert_eq!(retrieved_creds.jira_token, new_creds.jira_token);
+        assert_eq!(retrieved_creds.jira_email, new_creds.jira_email);
+
+        let _ = fs::remove_dir_all(test_db_path);
     }
 }

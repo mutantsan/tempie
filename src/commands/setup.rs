@@ -1,3 +1,4 @@
+use crate::api::ApiClient;
 use crate::storage::Storage;
 use crate::models::UserCredentials;
 use dialoguer::{Input, Password};
@@ -6,10 +7,8 @@ const JIRA_API_TOKENS_URL: &str = "https://id.atlassian.com/manage-profile/secur
 const TEMPO_API_INTEGRATION_URL: &str =
     "/plugins/servlet/ac/io.tempo.jira/tempo-app#!/configuration/api-integration";
 
-pub fn setup() {
-    let storage = Storage::new();
-
-    if !should_overwrite_credentials(&storage) {
+pub fn setup(api: &ApiClient) {
+    if !should_overwrite_credentials(&api.storage) {
         return;
     }
 
@@ -18,7 +17,7 @@ pub fn setup() {
     let jira_token = get_jira_token();
     let jira_email = get_jira_email();
 
-    storage.store_credentials(UserCredentials {
+    api.storage.store_credentials(UserCredentials {
         url: jira_url.clone(),
         account_id,
         tempo_token,
