@@ -21,6 +21,8 @@ pub struct WorklogItem {
     #[serde(rename = "timeSpentSeconds")]
     pub time_spent_seconds: i32,
     pub description: String,
+    #[serde(rename = "createdAt")]
+    pub created_at: String,
     pub issue: TempoIssue,
     #[serde(skip)]
     pub jira_issue: Option<JiraIssue>,

@@ -68,6 +68,23 @@ pub fn current_month_name() -> String {
     today.format("%B").to_string()
 }
 
+pub fn current_month_first_day() -> String {
+    let today = Local::now();
+    today.format("%Y-%m-01").to_string()
+}
+
+pub fn current_month_last_day() -> String {
+    let today = Local::now();
+    let (year, month) = (today.year(), today.month());
+
+    NaiveDate::from_ymd_opt(year, month + 1, 1)
+        .unwrap_or(NaiveDate::from_ymd_opt(year + 1, 1, 1).unwrap())
+        .pred_opt()
+        .unwrap()
+        .format("%Y-%m-%d")
+        .to_string()
+}
+
 // Get today's date in ISO 8601 format
 pub fn today_as_iso8601() -> String {
     let today = Local::now().format("%Y-%m-%d").to_string();
@@ -89,6 +106,24 @@ pub fn ensure_credentials_exist(storage: &Storage) -> Result<(), String> {
 mod tests {
     use super::*;
     use crate::models::UserCredentials;
+
+    fn test_date_string_format(date_string: &str) -> Result<(), String> {
+        let parts: Vec<&str> = date_string.split('-').collect();
+
+        if parts.len() != 3 {
+            return Err("Invalid date format: expected YYYY-MM-DD".to_string());
+        }
+
+        let [year, month, day] = parts.as_slice() else {
+            return Err("Invalid date format: expected YYYY-MM-DD".to_string());
+        };
+
+        if year.is_empty() || month.is_empty() || day.is_empty() {
+            return Err("Invalid date format: empty components".to_string());
+        }
+
+        Ok(())
+    }
 
     #[test]
     fn test_parse_duration_from_string() {
@@ -144,18 +179,7 @@ mod tests {
     #[test]
     fn test_today_as_iso8601() {
         let today = today_as_iso8601();
-        let parts: Vec<&str> = today.split("-").collect();
-
-        match parts.as_slice() {
-            [year, month, day] => {
-                assert!(*year != "");
-                assert!(*month != "");
-                assert!(*day != "");
-            }
-            _ => {
-                panic!("Impossible to parse")
-            }
-        }
+        assert!(test_date_string_format(&today).is_ok());
     }
 
     #[test]
@@ -173,7 +197,6 @@ mod tests {
         let storage = Storage::with_path(test_db_path);
 
         assert!(ensure_credentials_exist(&storage).is_err());
-
 
         storage.store_credentials(UserCredentials {
             url: "https://test.com".to_string(),
@@ -193,5 +216,17 @@ mod tests {
         let working_seconds = working_seconds_in_current_month();
         assert!(working_seconds > 518400);
         assert!(working_seconds < 662400);
+    }
+
+    #[test]
+    fn test_current_month_first_day() {
+        let first_day = current_month_first_day();
+        assert!(test_date_string_format(&first_day).is_ok());
+    }
+
+    #[test]
+    fn test_current_month_last_day() {
+        let last_day = current_month_last_day();
+        assert!(test_date_string_format(&last_day).is_ok());
     }
 }
