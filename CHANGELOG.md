@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.2] - 2025-04-06
+
+### 🐛 Bug Fixes
+
+- Fix setup command requires creds
+
 ## [0.5.1] - 2025-04-06
 
 ### 🐛 Bug Fixes
