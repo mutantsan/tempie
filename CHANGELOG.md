@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.1] - 2025-04-07
+
+### 🚜 Refactor
+
+- Update list api endpoint to make concurrent calls
+
 ## [0.6.0] - 2025-04-07
 
 ### 🚀 Features
