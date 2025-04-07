@@ -119,7 +119,7 @@ impl ApiTrait for ApiClient {
         let mut worklogs: Vec<WorklogItem> = Vec::new();
 
         let mut offset = 0;
-        let limit = 100;
+        let limit = 50;
 
         loop {
             let response = self

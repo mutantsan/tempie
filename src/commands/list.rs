@@ -9,25 +9,17 @@ use tabled::{
     builder::Builder,
     settings::object::Rows,
     settings::style::BorderSpanCorrection,
-    settings::{Alignment, Span, Color, Style},
+    settings::{Alignment, Color, Span, Style},
 };
 
-pub async fn list(api: &ApiClient, from_date: &str, to_date: &str) {
+pub async fn list(api: &ApiClient, date: &str) {
     let mut spinner = Spinner::new(Spinners::Dots, "Retrieving worklogs...".to_string());
-    let first_day = utils::current_month_first_day();
-    let last_day = utils::current_month_last_day();
-    let mut retrieve_start_date = first_day.to_string();
+    let first_day = utils::get_first_day_of_month(date);
+    let last_day = utils::get_last_day_of_month(date);
 
-    if from_date.to_string() < first_day {
-        retrieve_start_date = from_date.to_string();
-    }
-
-    match api.list_worklogs(&retrieve_start_date, &last_day).await {
+    match api.list_worklogs(&first_day, &last_day).await {
         Ok(worklogs) => {
-            spinner.stop_with_message(format!(
-                "\n{}",
-                build_table(worklogs, &from_date, &to_date, &api.storage)
-            ));
+            spinner.stop_with_message(format!("\n{}", build_table(worklogs, &date, &api.storage)));
         }
         Err(e) => {
             spinner.stop_with_message(format!("\nError. Failed to list worklogs: {}", e));
@@ -35,28 +27,24 @@ pub async fn list(api: &ApiClient, from_date: &str, to_date: &str) {
     }
 }
 
-fn build_table(
-    worklogs: Vec<WorklogItem>,
-    from_date: &str,
-    to_date: &str,
-    storage: &Storage,
-) -> Table {
+fn build_table(worklogs: Vec<WorklogItem>, date: &str, storage: &Storage) -> Table {
     let config = storage.get_credentials().unwrap();
-    let worked_seconds_this_month = calculate_total_time(&worklogs);
-    let working_seconds_in_current_month = utils::working_seconds_in_current_month();
-    let filtered_worklogs = filter_out_worklogs_by_date(&worklogs, from_date, to_date);
     let mut builder = Builder::default();
     let mut total_time = 0;
 
     add_header_rows(
         &mut builder,
-        worked_seconds_this_month,
-        working_seconds_in_current_month,
-        from_date,
-        to_date,
+        calculate_total_time(&worklogs),
+        utils::working_seconds_in_month(date),
+        date,
     );
     add_column_headers(&mut builder);
-    add_worklog_rows(&mut builder, &filtered_worklogs, &config, &mut total_time);
+    add_worklog_rows(
+        &mut builder,
+        &filter_out_worklogs_by_date(&worklogs, date),
+        &config,
+        &mut total_time,
+    );
     add_footer_row(&mut builder, total_time);
 
     let mut table = builder.build();
@@ -65,17 +53,11 @@ fn build_table(
     table
 }
 
-fn add_header_rows(
-    builder: &mut Builder,
-    worked_seconds: i32,
-    working_seconds: i32,
-    from_date: &str,
-    to_date: &str,
-) {
+fn add_header_rows(builder: &mut Builder, worked_seconds: i32, working_seconds: i32, date: &str) {
     builder.push_record(vec![
         format!(
             "{} {}/{} (-{})",
-            utils::current_month_name(),
+            utils::get_month_name(date),
             utils::format_duration(worked_seconds),
             utils::format_duration(working_seconds),
             utils::format_duration(working_seconds - worked_seconds)
@@ -83,27 +65,9 @@ fn add_header_rows(
         .as_str(),
     ]);
 
-    if from_date != to_date {
-        builder.push_record(vec![
-            format!(
-                "{} ({}) - {} ({})",
-                utils::get_day_name_from_iso8601(from_date),
-                from_date,
-                utils::get_day_name_from_iso8601(to_date),
-                to_date
-            )
-            .as_str(),
-        ]);
-    } else {
-        builder.push_record(vec![
-            format!(
-                "{} ({})",
-                utils::get_day_name_from_iso8601(from_date),
-                from_date
-            )
-            .as_str(),
-        ]);
-    }
+    builder.push_record(vec![
+        format!("{} ({})", utils::get_day_name_from_iso8601(date), date).as_str(),
+    ]);
 }
 
 fn add_column_headers(builder: &mut Builder) {
@@ -176,14 +140,13 @@ fn calculate_total_time(worklogs: &Vec<WorklogItem>) -> i32 {
 // Filter out worklogs by date provided by the user
 fn filter_out_worklogs_by_date<'a>(
     worklogs: &'a Vec<WorklogItem>,
-    from_date: &str,
-    to_date: &str,
+    date: &str,
 ) -> Vec<&'a WorklogItem> {
     worklogs
         .iter()
         .filter(|worklog| {
             let worklog_date = worklog.created_at.split('T').next().unwrap();
-            worklog_date >= from_date && worklog_date <= to_date
+            worklog_date >= date && worklog_date <= date
         })
         .collect()
 }
@@ -231,12 +194,7 @@ mod tests {
 
         let storage = init_test_db();
 
-        let table = build_table(
-            worklogs,
-            &"2025-04-01".to_string(),
-            &"2025-04-01".to_string(),
-            &storage,
-        );
+        let table = build_table(worklogs, &"2025-04-01".to_string(), &storage);
         let table_str = table.to_string();
 
         assert!(table_str.contains("ID"));
@@ -269,19 +227,11 @@ mod tests {
             }),
         }];
 
-        let filtered_worklogs = filter_out_worklogs_by_date(
-            &worklogs,
-            &"2025-04-01".to_string(),
-            &"2025-04-01".to_string(),
-        );
+        let filtered_worklogs = filter_out_worklogs_by_date(&worklogs, &"2025-04-01".to_string());
         assert_eq!(filtered_worklogs.len(), 1);
         assert_eq!(filtered_worklogs[0].tempo_worklog_id, 99);
 
-        let filtered_worklogs = filter_out_worklogs_by_date(
-            &worklogs,
-            &"2025-04-02".to_string(),
-            &"2025-04-05".to_string(),
-        );
+        let filtered_worklogs = filter_out_worklogs_by_date(&worklogs, &"2025-04-02".to_string());
         assert_eq!(filtered_worklogs.len(), 0);
     }
 

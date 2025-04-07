@@ -24,16 +24,10 @@ enum Commands {
     List {
         #[arg(
             default_value_t = today_as_iso8601(),
-            help = "The start date to list worklogs from (format: YYYY-MM-DD)",
+            help = "The date to list worklogs from (format: YYYY-MM-DD)",
             value_parser = validators::validate_iso8601_date
         )]
-        from_date: String,
-        #[arg(
-            default_value_t = today_as_iso8601(),
-            help = "The end date to list worklogs to (format: YYYY-MM-DD)",
-            value_parser = validators::validate_iso8601_date
-        )]
-        to_date: String,
+        date: String,
     },
     /// Log time
     Log {
@@ -74,7 +68,7 @@ async fn main() {
     match cli.command {
         Commands::Setup => {}
         Commands::CleanJiraIssues => {}
-        Commands::List { from_date, to_date } => list(&api, &from_date, &to_date).await,
+        Commands::List { date } => list(&api, &date).await,
         Commands::Log {
             issue_key,
             time_spent,

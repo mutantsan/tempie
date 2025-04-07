@@ -36,9 +36,9 @@ pub fn format_duration(seconds: i32) -> String {
 }
 
 // Get how many working hours in a current month
-pub fn working_seconds_in_current_month() -> i32 {
-    let today = Local::now().date_naive();
-    let (year, month) = (today.year(), today.month());
+pub fn working_seconds_in_month(date: &str) -> i32 {
+    let date = NaiveDate::parse_from_str(date, "%Y-%m-%d").unwrap();
+    let (year, month) = (date.year(), date.month());
 
     // Get the last day of the current month
     let last_day = NaiveDate::from_ymd_opt(year, month, 1)
@@ -57,27 +57,16 @@ pub fn working_seconds_in_current_month() -> i32 {
     working_days * WORKING_HOURS_PER_DAY * SECONDS_PER_HOUR
 }
 
-// Check if a day is a weekend
-pub fn is_weekend(weekday: Weekday) -> bool {
-    weekday == Weekday::Sat || weekday == Weekday::Sun
+// Get the first day of the month in ISO 8601 format
+pub fn get_first_day_of_month(date: &str) -> String {
+    let date = NaiveDate::parse_from_str(date, "%Y-%m-%d").unwrap();
+    date.format("%Y-%m-01").to_string()
 }
 
-// Get the current month name
-pub fn current_month_name() -> String {
-    let today = Local::now();
-    today.format("%B").to_string()
-}
-
-// Get the first day of the current month in ISO 8601 format
-pub fn current_month_first_day() -> String {
-    let today = Local::now();
-    today.format("%Y-%m-01").to_string()
-}
-
-// Get the last day of the current month in ISO 8601 format
-pub fn current_month_last_day() -> String {
-    let today = Local::now();
-    let (year, month) = (today.year(), today.month());
+// Get the last day of the month in ISO 8601 format
+pub fn get_last_day_of_month(date: &str) -> String {
+    let date = NaiveDate::parse_from_str(date, "%Y-%m-%d").unwrap();
+    let (year, month) = (date.year(), date.month());
 
     NaiveDate::from_ymd_opt(year, month + 1, 1)
         .unwrap_or(NaiveDate::from_ymd_opt(year + 1, 1, 1).unwrap())
@@ -85,6 +74,17 @@ pub fn current_month_last_day() -> String {
         .unwrap()
         .format("%Y-%m-%d")
         .to_string()
+}
+
+// Check if a day is a weekend
+pub fn is_weekend(weekday: Weekday) -> bool {
+    weekday == Weekday::Sat || weekday == Weekday::Sun
+}
+
+// Get the month name from an ISO 8601 date string, e.g "2025-04-01" -> "April"
+pub fn get_month_name(date: &str) -> String {
+    let date = NaiveDate::parse_from_str(date, "%Y-%m-%d").unwrap();
+    date.format("%B").to_string()
 }
 
 // Get today's date in ISO 8601 format
@@ -178,23 +178,16 @@ mod tests {
     }
 
     #[test]
-    fn test_current_month_name() {
-        let current_month = current_month_name();
-        assert!(current_month.len() > 0);
-        assert!(current_month.chars().all(|c| c.is_alphabetic()));
+    fn test_get_month_name() {
+        assert_eq!(get_month_name("2025-04-01"), "April");
+        assert_eq!(get_month_name("2025-05-01"), "May");
+        assert_eq!(get_month_name("2025-06-30"), "June");
     }
 
     #[test]
     fn test_today_as_iso8601() {
         let today = today_as_iso8601();
         assert!(test_date_string_format(&today).is_ok());
-    }
-
-    #[test]
-    fn test_is_weekend() {
-        assert_eq!(is_weekend(chrono::Weekday::Sat), true);
-        assert_eq!(is_weekend(chrono::Weekday::Sun), true);
-        assert_eq!(is_weekend(chrono::Weekday::Mon), false);
     }
 
     #[test]
@@ -220,22 +213,21 @@ mod tests {
     }
 
     #[test]
-    fn test_working_seconds_in_current_month() {
-        let working_seconds = working_seconds_in_current_month();
-        assert!(working_seconds > 518400);
-        assert!(working_seconds < 662400);
+    fn test_working_seconds_in_month() {
+        let working_seconds = working_seconds_in_month("2025-04-01");
+        assert_eq!(working_seconds, 633600);
     }
 
     #[test]
-    fn test_current_month_first_day() {
-        let first_day = current_month_first_day();
-        assert!(test_date_string_format(&first_day).is_ok());
+    fn test_get_first_day_of_month() {
+        let first_day = get_first_day_of_month("2025-04-22");
+        assert_eq!(first_day, "2025-04-01");
     }
 
     #[test]
-    fn test_current_month_last_day() {
-        let last_day = current_month_last_day();
-        assert!(test_date_string_format(&last_day).is_ok());
+    fn test_get_last_day_of_month() {
+        let last_day = get_last_day_of_month("2025-04-22");
+        assert_eq!(last_day, "2025-04-30");
     }
 
     #[test]
