@@ -2,9 +2,12 @@ use crate::models::*;
 use crate::storage::Storage;
 use crate::utils::parse_duration_from_string;
 use chrono::Local;
+use futures::{StreamExt, stream};
 use reqwest::{Client, StatusCode};
+use std::collections::HashSet;
 
 const TEMPO_BASE_URL: &str = "https://api.tempo.io/4";
+const CONCURRENT_REQUESTS: usize = 5;
 
 #[async_trait::async_trait]
 pub trait ApiTrait {
@@ -34,6 +37,32 @@ impl ApiClient {
             storage,
             config,
         }
+    }
+
+    // Prefetch Jira issues concurrently
+    async fn prefetch_jira_issues_concurrently(&self, worklogs: &Vec<WorklogItem>) -> Vec<JiraIssue> {
+        let mut issues = HashSet::new();
+
+        for worklog in worklogs {
+            issues.insert(worklog.issue.id.to_string());
+        }
+
+        stream::iter(issues.iter().cloned())
+            .map(|issue_id| {
+                async move {
+                    match self.get_jira_issue(&issue_id).await {
+                        Ok(issue) => Some(issue),
+                        Err(e) => {
+                            eprintln!("Failed to fetch issue {}: {}", issue_id, e);
+                            None
+                        }
+                    }
+                }
+            })
+            .buffer_unordered(CONCURRENT_REQUESTS)
+            .filter_map(async move |res| res) // Only keep successful results
+            .collect()
+            .await
     }
 }
 
@@ -90,7 +119,7 @@ impl ApiTrait for ApiClient {
         let mut worklogs: Vec<WorklogItem> = Vec::new();
 
         let mut offset = 0;
-        let limit = 50;
+        let limit = 100;
 
         loop {
             let response = self
@@ -118,13 +147,15 @@ impl ApiTrait for ApiClient {
                 .await
                 .map_err(|e| format!("Failed to parse JSON: {}", e))?;
 
+            if json_data.results.is_empty() {
+                break;
+            }
+
+            let _ = self.prefetch_jira_issues_concurrently(&json_data.results).await;
+
             for worklog in json_data.results.iter_mut() {
                 worklog.jira_issue =
                     Some(self.get_jira_issue(&worklog.issue.id.to_string()).await?);
-            }
-
-            if json_data.results.is_empty() {
-                break;
             }
 
             worklogs.extend(json_data.results);
