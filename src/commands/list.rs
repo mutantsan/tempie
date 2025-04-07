@@ -4,11 +4,13 @@ use crate::storage::Storage;
 use crate::utils;
 
 use spinners::{Spinner, Spinners};
-use tabled::builder::Builder;
-use tabled::settings::object::Rows;
 use tabled::{
     Table,
+    builder::Builder,
+    settings::object::Rows,
+    settings::style::BorderSpanCorrection,
     settings::{Alignment, Span},
+    settings::{Color, Style},
 };
 
 pub async fn list(api: &ApiClient, from_date: &str, to_date: &str) {
@@ -155,6 +157,12 @@ fn apply_table_formatting(table: &mut Table) {
     table.modify(Rows::first(), Alignment::center());
     table.modify(Rows::single(1), Alignment::center());
     table.modify(Rows::last(), Alignment::right());
+
+    table.with(Style::modern());
+    table.with(BorderSpanCorrection);
+
+    table.modify(Rows::first(), Color::BG_BLACK | Color::FG_WHITE);
+    table.modify(Rows::last(), Color::BG_BLACK | Color::FG_WHITE);
 }
 
 // Calculate the total time spent in seconds this month
