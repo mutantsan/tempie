@@ -68,11 +68,13 @@ pub fn current_month_name() -> String {
     today.format("%B").to_string()
 }
 
+// Get the first day of the current month in ISO 8601 format
 pub fn current_month_first_day() -> String {
     let today = Local::now();
     today.format("%Y-%m-01").to_string()
 }
 
+// Get the last day of the current month in ISO 8601 format
 pub fn current_month_last_day() -> String {
     let today = Local::now();
     let (year, month) = (today.year(), today.month());
