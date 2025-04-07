@@ -83,6 +83,21 @@ impl Storage {
             .flatten()
             .and_then(|v| serde_json::from_slice(&v).ok())
     }
+
+    // Delete all jira issues
+    pub fn delete_jira_issues(&self) {
+        for k in self.db.iter().keys() {
+            let key = k.unwrap();
+
+            if key == "jira_credentials" {
+                continue;
+            }
+
+            let _old = self.db.remove(key);
+        }
+
+        self.db.flush().unwrap();
+    }
 }
 
 #[cfg(test)]
@@ -194,5 +209,28 @@ mod tests {
         assert_eq!(retrieved_creds.jira_email, new_creds.jira_email);
 
         let _ = fs::remove_dir_all(test_db_path);
+    }
+
+    #[test]
+    fn test_storage_delete_jira_issues() {
+        let test_db_path = "test_storage_delete_jira_issues";
+        cleanup_test_db(test_db_path);
+        let storage = Storage::with_path(test_db_path);
+
+        storage.store_credentials(create_test_credentials());
+
+        storage.store_jira_issue(&JiraIssue {
+            id: "12345".to_string(),
+            key: "TEST-123".to_string(),
+        });
+
+        storage.delete_jira_issues();
+
+        // Verify that the jira issue is deleted, but credentials are preserved
+        assert!(storage.get_jira_issue(&"12345".to_string()).is_none());
+        assert!(storage.get_jira_issue(&"TEST-123".to_string()).is_none());
+        assert!(storage.get_credentials().is_some());
+
+        cleanup_test_db(test_db_path);
     }
 }

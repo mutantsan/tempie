@@ -3,10 +3,10 @@ mod commands;
 mod models;
 mod storage;
 mod utils;
-
-use crate::commands::{delete_log, list, log_time, setup};
-use crate::utils::{ensure_credentials_exist, today_as_iso8601};
+mod validators;
+use crate::commands::{clean_jira_issues, delete_log, list, log_time, setup};
 use crate::storage::Storage;
+use crate::utils::{ensure_credentials_exist, today_as_iso8601};
 use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
@@ -22,9 +22,17 @@ enum Commands {
     Setup,
     /// List worklogs
     List {
-        #[arg(default_value_t = today_as_iso8601(), help = "The start date to list worklogs from (format: YYYY-MM-DD)")]
+        #[arg(
+            default_value_t = today_as_iso8601(),
+            help = "The start date to list worklogs from (format: YYYY-MM-DD)",
+            value_parser = validators::validate_iso8601_date
+        )]
         from_date: String,
-        #[arg(default_value_t = today_as_iso8601(), help = "The end date to list worklogs to (format: YYYY-MM-DD)")]
+        #[arg(
+            default_value_t = today_as_iso8601(),
+            help = "The end date to list worklogs to (format: YYYY-MM-DD)",
+            value_parser = validators::validate_iso8601_date
+        )]
         to_date: String,
     },
     /// Log time
@@ -36,11 +44,13 @@ enum Commands {
         #[arg(help = "The comment to add to the worklog. Optional.")]
         comment: Option<String>,
     },
-    /// Delete worklog
+    /// Delete worklog(s)
     Delete {
-        #[arg(help = "Worklog ID to delete", num_args = 1..)]
+        #[arg(help = "Worklog ID(s) to delete", num_args = 1..)]
         worklog_ids: Vec<String>,
     },
+    /// Clean jira issues from database
+    CleanJiraIssues,
 }
 
 #[tokio::main]
@@ -50,10 +60,11 @@ async fn main() {
 
     match cli.command {
         Commands::Setup => setup(&storage),
+        Commands::CleanJiraIssues => clean_jira_issues(&storage).await,
         _ => {}
     }
 
-    if  let Err(err) = ensure_credentials_exist(&storage) {
+    if let Err(err) = ensure_credentials_exist(&storage) {
         eprintln!("{}", err);
         std::process::exit(1);
     }
@@ -62,6 +73,7 @@ async fn main() {
 
     match cli.command {
         Commands::Setup => {}
+        Commands::CleanJiraIssues => {}
         Commands::List { from_date, to_date } => list(&api, &from_date, &to_date).await,
         Commands::Log {
             issue_key,
