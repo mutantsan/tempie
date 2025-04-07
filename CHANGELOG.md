@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.0] - 2025-04-07
+
+### 🚀 Features
+
+- Validate list args, add clean-jira-issues command
+
 ## [0.5.5] - 2025-04-07
 
 ### 🐛 Bug Fixes
