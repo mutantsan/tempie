@@ -131,6 +131,7 @@ fn add_worklog_rows(
             utils::format_duration(worklog.time_spent_seconds),
             chrono::DateTime::parse_from_rfc3339(&worklog.created_at)
                 .unwrap()
+                .with_timezone(&chrono::Local)
                 .format("%Y-%m-%d %H:%M:%S")
                 .to_string(),
             worklog.description.to_string(),

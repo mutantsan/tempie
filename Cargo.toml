@@ -5,7 +5,7 @@ edition = "2024"
 license = "MIT"
 name = "tempie"
 repository = "https://github.com/mutantsan/tempie"
-version = "0.5.3"
+version = "0.5.4"
 
 [lib]
 name = "tempie"
