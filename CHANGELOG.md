@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.3] - 2025-04-07
+
+### 🚜 Refactor
+
+- Update table styles, use modern style and fix border issue
+
 ## [0.5.2] - 2025-04-06
 
 ### 🐛 Bug Fixes
