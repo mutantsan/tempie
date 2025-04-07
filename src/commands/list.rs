@@ -9,8 +9,7 @@ use tabled::{
     builder::Builder,
     settings::object::Rows,
     settings::style::BorderSpanCorrection,
-    settings::{Alignment, Span},
-    settings::{Color, Style},
+    settings::{Alignment, Span, Color, Style},
 };
 
 pub async fn list(api: &ApiClient, from_date: &str, to_date: &str) {

@@ -1,7 +1,8 @@
+use crate::models::{JiraIssue, UserCredentials};
 use serde_json;
 use sled;
-
-use crate::models::{JiraIssue, UserCredentials};
+use std::path::PathBuf;
+use xdg_home::home_dir;
 
 pub struct Storage {
     db: sled::Db,
@@ -9,7 +10,7 @@ pub struct Storage {
 
 impl Storage {
     pub fn new() -> Self {
-        Self::with_path("tempie.db")
+        Self::with_path(Self::get_db_path("tempie.db").to_str().unwrap())
     }
 
     pub fn with_path(path: &str) -> Self {
@@ -21,6 +22,18 @@ impl Storage {
         });
 
         Self { db }
+    }
+
+    pub fn get_db_path(db_name: &str) -> PathBuf {
+        let home = home_dir().unwrap();
+
+        let tempie_dir = home.join(".tempie");
+
+        if !tempie_dir.exists() {
+            std::fs::create_dir_all(&tempie_dir).expect("Could not create .tempie directory");
+        }
+
+        tempie_dir.join(db_name)
     }
 
     // Store Jira credentials
