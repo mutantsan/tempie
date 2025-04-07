@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.4] - 2025-04-07
+
+### 🐛 Bug Fixes
+
+- Use local time in a list table
+
 ## [0.5.3] - 2025-04-07
 
 ### 🚜 Refactor
