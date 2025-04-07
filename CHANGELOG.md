@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.5] - 2025-04-07
+
+### 🐛 Bug Fixes
+
+- Fix bug with database creationg directory
+
+### 📚 Documentation
+
+- Update readme
+- Update readme, trying to represent the list table
+
 ## [0.5.4] - 2025-04-07
 
 ### 🐛 Bug Fixes
