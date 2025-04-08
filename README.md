@@ -66,10 +66,10 @@ View your worklogs:
 tempie list
 ```
 
-By default, it shows today's worklogs. You can specify a date range:
+By default, it shows today's worklogs. You can specify a date:
 
 ```bash
-tempie list 2024-03-01 2024-03-31
+tempie list 2024-03-01
 ```
 
 ### Delete Worklog
