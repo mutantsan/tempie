@@ -1,9 +1,38 @@
 use crate::storage::Storage;
 use chrono::{Datelike, Local, NaiveDate, Weekday};
+use fluent::FluentResource;
+use fluent_bundle::{FluentArgs, FluentBundle};
 use humantime::parse_duration;
-
+use unic_langid::LanguageIdentifier;
 const WORKING_HOURS_PER_DAY: i32 = 8;
 const SECONDS_PER_HOUR: i32 = 3600;
+
+use std::cell::RefCell;
+use std::thread_local;
+
+thread_local! {
+    static I18N: RefCell<FluentBundle<FluentResource>> = RefCell::new({
+        let lang = get_current_locale();
+        let langid: LanguageIdentifier = lang.parse().expect("Invalid language ID");
+
+        let path = format!("src/locales/{}.ftl", lang);
+        let source = std::fs::read_to_string(path).unwrap_or_else(|_| {
+            eprintln!(
+                "Sorry, but Tempie doesn't support the language you've set ({}).",
+                lang
+            );
+            std::process::exit(1);
+        });
+        let res = FluentResource::try_new(source).expect("Failed to parse FTL");
+
+        let mut bundle = FluentBundle::new(vec![langid]);
+        bundle
+            .add_resource(res)
+            .expect("Failed to add FTL to bundle");
+
+        bundle
+    });
+}
 
 // Parse a duration from a string. hours:minutes -> seconds
 pub fn parse_duration_from_string(duration_str: &str) -> i32 {
@@ -20,19 +49,22 @@ pub fn format_duration(seconds: i32) -> String {
     let hours = total_minutes / 60;
     let minutes = total_minutes % 60;
 
+    let h = translate("hours", None);
+    let m = translate("minutes", None);
+
     if hours == 0 && minutes == 0 {
-        return "0h".to_string();
+        return format!("0{}", h);
     }
 
     if minutes == 0 {
-        return format!("{}h", hours);
+        return format!("{}{}", hours, h);
     }
 
     if hours == 0 {
-        return format!("{}m", minutes);
+        return format!("{}{}", minutes, m);
     }
 
-    format!("{}h{}m", hours, minutes)
+    format!("{}{}{}{}", hours, h, minutes, m)
 }
 
 // Get how many working hours in a current month
@@ -46,7 +78,7 @@ pub fn working_seconds_in_month(date: &str) -> i32 {
         .or_else(|| NaiveDate::from_ymd_opt(year + 1, 1, 1))
         .and_then(|date| date.pred_opt())
         .map(|date| date.day())
-        .expect("Failed to get last day of month");
+        .expect(translate("error-failed-to-get-last-day-of-month", None).as_str());
 
     // Calculate working days (excluding weekends) and multiply by 8 hours
     let working_days = (1..=last_day)
@@ -104,10 +136,27 @@ pub fn ensure_credentials_exist(storage: &Storage) -> Result<(), String> {
     let config = storage.get_credentials();
 
     if config.is_none() {
-        return Err("Credentials are not set up. Please run `tempie setup` first.".to_string());
+        return Err(translate("error-credentials-not-set-up", None));
     }
 
     Ok(())
+}
+
+pub fn get_current_locale() -> String {
+    std::env::var("TEMPIE_LANG").unwrap_or("en".to_string())
+}
+
+pub fn translate(key: &str, args: Option<&FluentArgs>) -> String {
+    I18N.with(|bundle| {
+        let bundle = bundle.borrow();
+        let msg = bundle.get_message(key).expect("Missing message key");
+        let pattern = msg.value().expect("Message has no value");
+
+        let mut errors = vec![];
+        bundle
+            .format_pattern(pattern, args, &mut errors)
+            .to_string()
+    })
 }
 
 #[cfg(test)]
@@ -119,11 +168,11 @@ mod tests {
         let parts: Vec<&str> = date_string.split('-').collect();
 
         if parts.len() != 3 {
-            return Err("Invalid date format: expected YYYY-MM-DD".to_string());
+            return Err(translate("error-invalid-date-format", None));
         }
 
         let [year, month, day] = parts.as_slice() else {
-            return Err("Invalid date format: expected YYYY-MM-DD".to_string());
+            return Err(translate("error-invalid-date-format", None));
         };
 
         if year.is_empty() || month.is_empty() || day.is_empty() {

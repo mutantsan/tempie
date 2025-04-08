@@ -57,7 +57,7 @@ fn add_header_rows(builder: &mut Builder, worked_seconds: i32, working_seconds: 
     builder.push_record(vec![
         format!(
             "{} {}/{} (-{})",
-            utils::get_month_name(date),
+            utils::translate(utils::get_month_name(date).as_str(), None),
             utils::format_duration(worked_seconds),
             utils::format_duration(working_seconds),
             utils::format_duration(working_seconds - worked_seconds)
@@ -66,17 +66,22 @@ fn add_header_rows(builder: &mut Builder, worked_seconds: i32, working_seconds: 
     ]);
 
     builder.push_record(vec![
-        format!("{} ({})", utils::get_day_name_from_iso8601(date), date).as_str(),
+        format!(
+            "{} ({})",
+            utils::translate(utils::get_day_name_from_iso8601(date).as_str(), None),
+            date
+        )
+        .as_str(),
     ]);
 }
 
 fn add_column_headers(builder: &mut Builder) {
     builder.push_record(vec![
-        "ID",
-        "Duration",
-        "Created At",
-        "Description",
-        "Issue URL",
+        utils::translate("table-id", None),
+        utils::translate("table-duration", None),
+        utils::translate("table-created-at", None),
+        utils::translate("table-description", None),
+        utils::translate("table-issue-url", None),
     ]);
 }
 
@@ -109,7 +114,12 @@ fn add_worklog_rows(
 
 fn add_footer_row(builder: &mut Builder, total_time: i32) {
     builder.push_record(vec![
-        format!("{}/8h", utils::format_duration(total_time)).as_str(),
+        format!(
+            "{}/8{}",
+            utils::format_duration(total_time),
+            utils::translate("hours", None)
+        )
+        .as_str(),
     ]);
 }
 
