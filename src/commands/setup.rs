@@ -24,7 +24,7 @@ pub fn setup(storage: &Storage) {
         jira_email,
     });
 
-    println!("\nJira credentials saved successfully!");
+    println!("\nUser credentials saved successfully!");
 }
 
 fn should_overwrite_credentials(storage: &Storage) -> bool {
@@ -32,7 +32,7 @@ fn should_overwrite_credentials(storage: &Storage) -> bool {
         return true;
     }
 
-    println!("\nJira credentials already saved!");
+    println!("\nUser credentials already saved!");
 
     let overwrite_prompt: String = Input::new()
         .with_prompt("Do you want to overwrite credentials? (y/N)")
