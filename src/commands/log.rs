@@ -11,7 +11,7 @@ pub async fn log_time(api: &ApiClient, issue_key: &str, time_spent: &str, commen
                 issue_key, time_spent
             ));
             println!(
-                "Run `tempie delete {}` to delete it",
+                "Run 'tempie delete {}' to delete it",
                 worklog.tempo_worklog_id
             );
         }
