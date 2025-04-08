@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.1] - 2025-04-08
+
+### 📚 Documentation
+
+- Update doc, remove mention of list range
+
 ## [0.7.0] - 2025-04-07
 
 ### 🚜 Refactor
