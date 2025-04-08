@@ -2,10 +2,11 @@
 authors = ["Oleksandr Cherniavskiy <mutantsan@gmail.com>"]
 description = "Jira time tracking CLI tool"
 edition = "2021"
+rust-version = "1.81.0"
 license = "MIT"
 name = "tempie"
 repository = "https://github.com/mutantsan/tempie"
-version = "0.7.2"
+version = "0.7.3"
 
 [lib]
 name = "tempie"

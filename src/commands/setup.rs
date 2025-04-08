@@ -1,5 +1,5 @@
-use crate::storage::Storage;
 use crate::models::UserCredentials;
+use crate::storage::Storage;
 use dialoguer::{Input, Password};
 
 const JIRA_API_TOKENS_URL: &str = "https://id.atlassian.com/manage-profile/security/api-tokens";
@@ -25,6 +25,7 @@ pub fn setup(storage: &Storage) {
     });
 
     println!("\nUser credentials saved successfully!");
+    println!("{}", format_credentials_for_display(storage));
 }
 
 fn should_overwrite_credentials(storage: &Storage) -> bool {
@@ -33,6 +34,7 @@ fn should_overwrite_credentials(storage: &Storage) -> bool {
     }
 
     println!("\nUser credentials already saved!");
+    println!("{}", format_credentials_for_display(storage));
 
     let overwrite_prompt: String = Input::new()
         .with_prompt("Do you want to overwrite credentials? (y/N)")
@@ -45,6 +47,41 @@ fn should_overwrite_credentials(storage: &Storage) -> bool {
         true
     } else {
         false
+    }
+}
+
+fn format_credentials_for_display(storage: &Storage) -> String {
+    let credentials = storage.get_credentials().unwrap();
+
+    let output = format!(
+        "\nCurrent credentials:
+
+👤 User Email: {}
+🔗 Jira URL: {}
+🔑 Jira Token: {}
+🔑 Tempo Token: {}\n",
+        credentials.jira_email,
+        credentials.url,
+        mask_token(&credentials.jira_token),
+        mask_token(&credentials.tempo_token)
+    );
+
+    output
+}
+
+/// Masks the middle of a token with `***`, keeping a few characters at the start and end.
+fn mask_token(token: &str) -> String {
+    let len = token.len();
+
+    match len {
+        0..=6 => "*".repeat(len), // Fully mask very short tokens
+        _ => {
+            let start_len = len / 4;
+            let end_len = len / 4;
+            let start = &token[..start_len];
+            let end = &token[len - end_len..];
+            format!("{start}***{end}")
+        }
     }
 }
 
@@ -117,4 +154,44 @@ fn get_jira_email() -> String {
         .with_prompt("Enter your Jira email")
         .interact_text()
         .unwrap()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::fs;
+
+    fn cleanup_test_db(path: &str) {
+        let _ = fs::remove_dir_all(path);
+    }
+
+    #[test]
+    fn test_mask_token() {
+        assert_eq!(mask_token("1234567890"), "12***90");
+        assert_eq!(mask_token("12345678901234567890"), "12345***67890");
+    }
+
+    #[test]
+    fn test_format_credentials_for_display() {
+        let test_db_path = "test_format_credentials_for_display";
+        cleanup_test_db(test_db_path);
+
+        let storage = Storage::with_path(test_db_path);
+        storage.store_credentials(UserCredentials {
+            url: "https://example.com".to_string(),
+            account_id: "1234567890".to_string(),
+            tempo_token: "tempo_token_value".to_string(),
+            jira_token: "jira_token_value".to_string(),
+            jira_email: "example@example.com".to_string(),
+        });
+
+        let output = format_credentials_for_display(&storage);
+
+        assert!(output.contains("👤 User Email: example@example.com"));
+        assert!(output.contains("🔗 Jira URL: https://example.com"));
+        assert!(output.contains("🔑 Jira Token: jira***alue"));
+        assert!(output.contains("🔑 Tempo Token: temp***alue"));
+
+        cleanup_test_db(test_db_path);
+    }
 }
