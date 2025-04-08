@@ -2,13 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.4] - 2025-04-08
+
+### 🐛 Bug Fixes
+
+- Catch jira issue fetch error to show a clear message
+
 ## [0.7.3] - 2025-04-08
 
 ### 🚜 Refactor
 
 - Print user creds in setup command, but hide tokens
-
-## [0.7.2] - 2025-04-08
 
 ### ⚙️ Miscellaneous Tasks
 

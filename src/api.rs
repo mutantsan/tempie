@@ -2,7 +2,7 @@ use crate::models::*;
 use crate::storage::Storage;
 use crate::utils::parse_duration_from_string;
 use chrono::Local;
-use futures::{StreamExt, stream};
+use futures::{stream, StreamExt};
 use reqwest::{Client, StatusCode};
 use std::collections::HashSet;
 
@@ -40,7 +40,10 @@ impl ApiClient {
     }
 
     // Prefetch Jira issues concurrently
-    async fn prefetch_jira_issues_concurrently(&self, worklogs: &Vec<WorklogItem>) -> Vec<JiraIssue> {
+    async fn prefetch_jira_issues_concurrently(
+        &self,
+        worklogs: &Vec<WorklogItem>,
+    ) -> Vec<JiraIssue> {
         let mut issues = HashSet::new();
 
         for worklog in worklogs {
@@ -48,14 +51,12 @@ impl ApiClient {
         }
 
         stream::iter(issues.iter().cloned())
-            .map(|issue_id| {
-                async move {
-                    match self.get_jira_issue(&issue_id).await {
-                        Ok(issue) => Some(issue),
-                        Err(e) => {
-                            eprintln!("Failed to fetch issue {}: {}", issue_id, e);
-                            None
-                        }
+            .map(|issue_id| async move {
+                match self.get_jira_issue(&issue_id).await {
+                    Ok(issue) => Some(issue),
+                    Err(e) => {
+                        eprintln!("Failed to fetch issue {}: {}", issue_id, e);
+                        None
                     }
                 }
             })
@@ -82,7 +83,7 @@ impl ApiTrait for ApiClient {
             .bearer_auth(&self.config.tempo_token)
             .json(&serde_json::json!({
                 "authorAccountId": self.config.account_id,
-                "issueId": issue.map_err(|e| format!("Failed to get Jira issue: {}", e))?.id,
+                "issueId": issue.map_err(|e| format!("{}", e))?.id,
                 "description": comment.unwrap_or_default(),
                 "startDate": Local::now().format("%Y-%m-%d").to_string(),
                 "timeSpentSeconds": parse_duration_from_string(time_spent)
@@ -91,8 +92,8 @@ impl ApiTrait for ApiClient {
             .await
             .map_err(|e| format!("Request error: {}", e))?;
 
-        if !response.status().is_success() {
-            let status = response.status();
+        let status = response.status();
+        if !status.is_success() {
             let error_body = response
                 .text()
                 .await
@@ -138,8 +139,9 @@ impl ApiTrait for ApiClient {
                 .await
                 .map_err(|e| format!("Request error: {}", e))?;
 
-            if !response.status().is_success() {
-                return Err(format!("Failed to fetch worklogs: {}", response.status()));
+            let status = response.status();
+            if !status.is_success() {
+                return Err(format!("Failed to fetch worklogs: {}", status));
             }
 
             let mut json_data: UserWorklogsResponse = response
@@ -151,7 +153,9 @@ impl ApiTrait for ApiClient {
                 break;
             }
 
-            let _ = self.prefetch_jira_issues_concurrently(&json_data.results).await;
+            let _ = self
+                .prefetch_jira_issues_concurrently(&json_data.results)
+                .await;
 
             for worklog in json_data.results.iter_mut() {
                 worklog.jira_issue =
@@ -206,6 +210,29 @@ impl ApiTrait for ApiClient {
             .basic_auth(&self.config.jira_email, Some(&self.config.jira_token));
 
         let response = client.send().await.expect("JIRA request failed");
+        let status = response.status();
+
+        if !status.is_success() {
+            let error_message = response
+                .text()
+                .await
+                .ok()
+                .and_then(|body| {
+                    serde_json::from_str::<serde_json::Value>(&body)
+                        .ok()
+                        .and_then(|json| {
+                            json["errorMessages"]
+                                .as_array()
+                                .and_then(|msgs| msgs.first())
+                                .and_then(|msg| msg.as_str())
+                                .map(String::from)
+                        })
+                })
+                .unwrap_or_else(|| "Failed to read error response".to_string());
+
+            return Err(format!("{} {}", error_message, status));
+        }
+
         let raw_response = response.text().await.expect("Failed to get response text");
 
         let json_data: JiraIssue = serde_json::from_str(&raw_response)
