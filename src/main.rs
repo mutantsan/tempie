@@ -4,7 +4,6 @@ mod models;
 mod storage;
 mod utils;
 mod validators;
-use crate::commands::{clean_jira_issues, delete_log, list, log_time, setup};
 use crate::storage::Storage;
 use crate::utils::{ensure_credentials_exist, today_as_iso8601};
 use clap::{Parser, Subcommand};
@@ -28,6 +27,19 @@ enum Commands {
             value_parser = validators::validate_iso8601_date
         )]
         date: String,
+    },
+    /// List worklogs by date range
+    ListRange {
+        #[arg(
+            help = "The date to list worklogs from (format: YYYY-MM-DD)",
+            value_parser = validators::validate_iso8601_date
+        )]
+        date_from: String,
+        #[arg(
+            help = "The date to list worklogs from (format: YYYY-MM-DD)",
+            value_parser = validators::validate_iso8601_date
+        )]
+        date_to: String,
     },
     /// Log time
     Log {
@@ -53,8 +65,8 @@ async fn main() {
     let storage = Storage::new();
 
     match cli.command {
-        Commands::Setup => setup(&storage),
-        Commands::CleanJiraIssues => clean_jira_issues(&storage).await,
+        Commands::Setup => commands::setup(&storage),
+        Commands::CleanJiraIssues => commands::clean_jira_issues(&storage).await,
         _ => {}
     }
 
@@ -68,12 +80,15 @@ async fn main() {
     match cli.command {
         Commands::Setup => {}
         Commands::CleanJiraIssues => {}
-        Commands::List { date } => list(&api, &date).await,
+        Commands::List { date } => commands::list(&api, &date).await,
+        Commands::ListRange { date_from, date_to } => {
+            commands::list_range(&api, &date_from, &date_to).await
+        }
         Commands::Log {
             issue_key,
             time_spent,
             comment,
-        } => log_time(&api, &issue_key, &time_spent, comment).await,
-        Commands::Delete { worklog_ids } => delete_log(&api, &worklog_ids).await,
+        } => commands::log_time(&api, &issue_key, &time_spent, comment).await,
+        Commands::Delete { worklog_ids } => commands::delete_log(&api, &worklog_ids).await,
     }
 }

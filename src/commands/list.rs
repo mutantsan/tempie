@@ -5,11 +5,11 @@ use crate::utils;
 
 use spinners::{Spinner, Spinners};
 use tabled::{
-    Table,
     builder::Builder,
     settings::object::Rows,
     settings::style::BorderSpanCorrection,
     settings::{Alignment, Color, Span, Style},
+    Table,
 };
 
 pub async fn list(api: &ApiClient, date: &str) {
@@ -19,7 +19,10 @@ pub async fn list(api: &ApiClient, date: &str) {
 
     match api.list_worklogs(&first_day, &last_day).await {
         Ok(worklogs) => {
-            spinner.stop_with_message(format!("\n{}", build_table(worklogs, &date, &api.storage)));
+            spinner.stop_with_message(format!(
+                "\n{}",
+                build_list_table(worklogs, &date, &api.storage)
+            ));
         }
         Err(e) => {
             spinner.stop_with_message(format!("\nError. Failed to list worklogs: {}", e));
@@ -27,7 +30,7 @@ pub async fn list(api: &ApiClient, date: &str) {
     }
 }
 
-fn build_table(worklogs: Vec<WorklogItem>, date: &str, storage: &Storage) -> Table {
+fn build_list_table(worklogs: Vec<WorklogItem>, date: &str, storage: &Storage) -> Table {
     let config = storage.get_credentials().unwrap();
     let mut builder = Builder::default();
     let mut total_time = 0;
@@ -38,39 +41,42 @@ fn build_table(worklogs: Vec<WorklogItem>, date: &str, storage: &Storage) -> Tab
         utils::working_seconds_in_month(date),
         date,
     );
+
     add_column_headers(&mut builder);
-    add_worklog_rows(
+
+    add_list_worklog_rows(
         &mut builder,
         &filter_out_worklogs_by_date(&worklogs, date),
         &config,
         &mut total_time,
     );
-    add_footer_row(&mut builder, total_time);
+    add_list_footer_row(&mut builder, total_time);
 
     let mut table = builder.build();
-    apply_table_formatting(&mut table);
+    apply_list_table_formatting(&mut table);
 
     table
 }
 
 fn add_header_rows(builder: &mut Builder, worked_seconds: i32, working_seconds: i32, date: &str) {
-    builder.push_record(vec![
-        format!(
-            "{} {}/{} (-{})",
-            utils::get_month_name(date),
-            utils::format_duration(worked_seconds),
-            utils::format_duration(working_seconds),
-            utils::format_duration(working_seconds - worked_seconds)
-        )
-        .as_str(),
-    ]);
+    builder.push_record(vec![format!(
+        "{} {}/{} (-{})",
+        utils::get_month_name(date),
+        utils::format_duration(worked_seconds),
+        utils::format_duration(working_seconds),
+        utils::format_duration(working_seconds - worked_seconds)
+    )
+    .as_str()]);
 
-    builder.push_record(vec![
-        format!("{} ({})", utils::get_day_name_from_iso8601(date), date).as_str(),
-    ]);
+    builder.push_record(vec![format!(
+        "{} ({})",
+        utils::get_day_name_from_iso8601(date),
+        date
+    )
+    .as_str()]);
 }
 
-fn add_column_headers(builder: &mut Builder) {
+pub fn add_column_headers(builder: &mut Builder) {
     builder.push_record(vec![
         "ID",
         "Duration",
@@ -80,7 +86,7 @@ fn add_column_headers(builder: &mut Builder) {
     ]);
 }
 
-fn add_worklog_rows(
+pub fn add_list_worklog_rows(
     builder: &mut Builder,
     worklogs: &Vec<&WorklogItem>,
     config: &UserCredentials,
@@ -107,13 +113,13 @@ fn add_worklog_rows(
     }
 }
 
-fn add_footer_row(builder: &mut Builder, total_time: i32) {
+fn add_list_footer_row(builder: &mut Builder, total_time: i32) {
     builder.push_record(vec![
-        format!("{}/8h", utils::format_duration(total_time)).as_str(),
+        format!("{}/8h", utils::format_duration(total_time)).as_str()
     ]);
 }
 
-fn apply_table_formatting(table: &mut Table) {
+fn apply_list_table_formatting(table: &mut Table) {
     table.modify(Rows::first(), Span::column(5));
     table.modify(Rows::single(1), Span::column(5));
     table.modify(Rows::last(), Span::column(5));
@@ -122,6 +128,10 @@ fn apply_table_formatting(table: &mut Table) {
     table.modify(Rows::single(1), Alignment::center());
     table.modify(Rows::last(), Alignment::right());
 
+    apply_common_formatting(table)
+}
+
+pub fn apply_common_formatting(table: &mut Table) {
     table.with(Style::modern());
     table.with(BorderSpanCorrection);
 
@@ -157,10 +167,10 @@ mod tests {
 
     use crate::models::{JiraIssue, TempoIssue, UserCredentials, WorklogItem};
 
-    const TEST_DB_PATH: &str = "test_build_table";
+    const TEST_DB_PATH: &str = "test_build_list_table";
 
-    fn init_test_db() -> Storage {
-        cleanup_test_db();
+    fn init_test_db(path: &str) -> Storage {
+        cleanup_test_db(path);
 
         let storage = Storage::with_path(TEST_DB_PATH);
         storage.store_credentials(UserCredentials {
@@ -174,12 +184,13 @@ mod tests {
         storage
     }
 
-    fn cleanup_test_db() {
-        let _ = std::fs::remove_dir_all(TEST_DB_PATH);
+    fn cleanup_test_db(path: &str) {
+        let _ = std::fs::remove_dir_all(path);
     }
 
     #[tokio::test]
-    async fn test_build_table() {
+    async fn test_build_list_table() {
+        let test_db_path = "test_storage_overwrite";
         let worklogs = vec![WorklogItem {
             tempo_worklog_id: 99,
             time_spent_seconds: 3600,
@@ -192,9 +203,9 @@ mod tests {
             }),
         }];
 
-        let storage = init_test_db();
+        let storage = init_test_db(test_db_path);
 
-        let table = build_table(worklogs, &"2025-04-01".to_string(), &storage);
+        let table = build_list_table(worklogs, &"2025-04-01".to_string(), &storage);
         let table_str = table.to_string();
 
         assert!(table_str.contains("ID"));
@@ -210,7 +221,7 @@ mod tests {
 
         assert!(table_str.contains("1h/8h"));
 
-        cleanup_test_db();
+        cleanup_test_db(test_db_path);
     }
 
     #[tokio::test]
