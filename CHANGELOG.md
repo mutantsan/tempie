@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.1] - 2025-04-10
+
+### 📚 Documentation
+
+- Update doc to include list-range command
+
 ## [0.8.0] - 2025-04-10
 
 ### 🚀 Features

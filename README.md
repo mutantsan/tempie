@@ -72,6 +72,14 @@ By default, it shows today's worklogs. You can specify a date:
 tempie list 2024-03-01
 ```
 
+### List Worklogs by Date Range
+
+View worklogs for a specific date range:
+
+```bash
+tempie list-range 2024-03-01 2024-03-31
+```
+
 ### Delete Worklog
 
 Remove a worklog by its ID(s). You can provide one or more IDs:
