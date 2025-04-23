@@ -103,13 +103,21 @@ pub fn add_list_worklog_rows(
                 .with_timezone(&chrono::Local)
                 .format("%Y-%m-%d %H:%M:%S")
                 .to_string(),
-            worklog.description.to_string(),
+            truncate_string(&worklog.description, 100),
             format!(
                 "{}/browse/{}",
                 config.url,
                 worklog.jira_issue.as_ref().unwrap().key
             ),
         ]);
+    }
+}
+
+fn truncate_string(string: &str, max_length: usize) -> String {
+    if string.len() > max_length {
+        format!("{}...", &string[..max_length])
+    } else {
+        string.to_string()
     }
 }
 
@@ -275,5 +283,11 @@ mod tests {
 
         let total_time = calculate_total_time(&worklogs);
         assert_eq!(total_time, 10800);
+    }
+
+    #[test]
+    fn test_truncate_string() {
+        assert_eq!(truncate_string("Hello, world!", 10), "Hello, wor...");
+        assert_eq!(truncate_string("Hello, world!", 15), "Hello, world!");
     }
 }
