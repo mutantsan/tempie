@@ -1,16 +1,16 @@
 use crate::api::{ApiClient, ApiTrait};
-use crate::models::{UserCredentials, WorklogItem};
+use crate::models::WorklogItem;
 use crate::storage::Storage;
 use crate::utils;
 
 use spinners::{Spinner, Spinners};
-use tabled::{
-    builder::Builder,
-    settings::object::Rows,
-    settings::style::BorderSpanCorrection,
-    settings::{Alignment, Color, Span, Style},
-    Table,
-};
+
+const RESET: &str = "\x1b[0m";
+const BOLD: &str = "\x1b[1m";
+const DIM: &str = "\x1b[2m";
+const FG_GREEN: &str = "\x1b[32m";
+const FG_YELLOW: &str = "\x1b[33m";
+const FG_CYAN: &str = "\x1b[36m";
 
 pub async fn list(api: &ApiClient, date: &str) {
     let mut spinner = Spinner::new(Spinners::Dots, "Retrieving worklogs...".to_string());
@@ -21,7 +21,7 @@ pub async fn list(api: &ApiClient, date: &str) {
         Ok(worklogs) => {
             spinner.stop_with_message(format!(
                 "\n{}",
-                build_list_table(worklogs, &date, &api.storage)
+                build_list_output(worklogs, date, &api.storage)
             ));
         }
         Err(e) => {
@@ -30,87 +30,74 @@ pub async fn list(api: &ApiClient, date: &str) {
     }
 }
 
-fn build_list_table(worklogs: Vec<WorklogItem>, date: &str, storage: &Storage) -> Table {
+fn build_list_output(worklogs: Vec<WorklogItem>, date: &str, storage: &Storage) -> String {
     let config = storage.get_credentials().unwrap();
-    let mut builder = Builder::default();
-    let mut total_time = 0;
+    let mut out = String::new();
 
-    add_header_rows(
-        &mut builder,
-        calculate_total_time(&worklogs),
-        utils::working_seconds_in_month(date),
-        date,
-    );
-
-    add_column_headers(&mut builder);
-
-    add_list_worklog_rows(
-        &mut builder,
-        &filter_out_worklogs_by_date(&worklogs, date),
-        &config,
-        &mut total_time,
-    );
-    add_list_footer_row(&mut builder, total_time);
-
-    let mut table = builder.build();
-    apply_list_table_formatting(&mut table);
-
-    table
-}
-
-fn add_header_rows(builder: &mut Builder, worked_seconds: i32, working_seconds: i32, date: &str) {
-    builder.push_record(vec![format!(
-        "{} {}/{} (-{})",
+    let worked = calculate_total_time(&worklogs);
+    let capacity = utils::working_seconds_in_month(date);
+    out += &format!(
+        "{}{}{} {}/{} {DIM}(-{}){RESET}\n",
+        BOLD,
         utils::get_month_name(date),
-        utils::format_duration(worked_seconds),
-        utils::format_duration(working_seconds),
-        utils::format_duration(working_seconds - worked_seconds)
-    )
-    .as_str()]);
-
-    builder.push_record(vec![format!(
-        "{} ({})",
+        RESET,
+        utils::format_duration(worked),
+        utils::format_duration(capacity),
+        utils::format_duration(capacity - worked),
+    );
+    out += &format!(
+        "{DIM}{} ({}){RESET}\n",
         utils::get_day_name_from_iso8601(date),
         date
-    )
-    .as_str()]);
+    );
+
+    let day_worklogs = filter_out_worklogs_by_date(&worklogs, date);
+    let mut daily_total = 0;
+
+    if !day_worklogs.is_empty() {
+        out += "\n";
+        out += &format_worklog_entries(&day_worklogs, &config.url, &mut daily_total);
+    }
+
+    out += &format!(
+        "  {BOLD}{FG_GREEN}{}{RESET}/8h\n",
+        utils::format_duration(daily_total)
+    );
+
+    out
 }
 
-pub fn add_column_headers(builder: &mut Builder) {
-    builder.push_record(vec![
-        "ID",
-        "Duration",
-        "Created At",
-        "Description",
-        "Issue URL",
-    ]);
-}
-
-pub fn add_list_worklog_rows(
-    builder: &mut Builder,
-    worklogs: &Vec<&WorklogItem>,
-    config: &UserCredentials,
+pub fn format_worklog_entries(
+    worklogs: &[&WorklogItem],
+    jira_base_url: &str,
     total_time: &mut i32,
-) {
+) -> String {
+    let mut out = String::new();
+
     for worklog in worklogs {
         *total_time += worklog.time_spent_seconds;
 
-        builder.push_record(vec![
-            worklog.tempo_worklog_id.to_string(),
+        let key = &worklog.jira_issue.as_ref().unwrap().key;
+        let url = format!("{}/browse/{}", jira_base_url, key);
+        let hyperlink = format!("\x1b]8;;{}\x1b\\{}\x1b]8;;\x1b\\", url, key);
+        let time = chrono::DateTime::parse_from_rfc3339(&worklog.created_at)
+            .unwrap()
+            .with_timezone(&chrono::Local)
+            .format("%m-%d %H:%M")
+            .to_string();
+
+        out += &format!(
+            "  {BOLD}{FG_YELLOW}#{}{RESET}  {FG_GREEN}{}{RESET}  {DIM}{}{RESET}  {FG_CYAN}{}{RESET}\n",
+            worklog.tempo_worklog_id,
             utils::format_duration(worklog.time_spent_seconds),
-            chrono::DateTime::parse_from_rfc3339(&worklog.created_at)
-                .unwrap()
-                .with_timezone(&chrono::Local)
-                .format("%Y-%m-%d %H:%M:%S")
-                .to_string(),
-            truncate_string(&worklog.description, 100),
-            format!(
-                "{}/browse/{}",
-                config.url,
-                worklog.jira_issue.as_ref().unwrap().key
-            ),
-        ]);
+            time,
+            hyperlink,
+        );
+        out += &format!("  {DIM}{}{RESET}\n", truncate_string(&worklog.description, 200));
+        out += &format!("\n{DIM}  {}{RESET}\n\n", "─".repeat(40));
     }
+
+    out
 }
 
 fn truncate_string(string: &str, max_length: usize) -> String {
@@ -121,50 +108,21 @@ fn truncate_string(string: &str, max_length: usize) -> String {
     }
 }
 
-fn add_list_footer_row(builder: &mut Builder, total_time: i32) {
-    builder.push_record(vec![
-        format!("{}/8h", utils::format_duration(total_time)).as_str()
-    ]);
-}
-
-fn apply_list_table_formatting(table: &mut Table) {
-    table.modify(Rows::first(), Span::column(5));
-    table.modify(Rows::single(1), Span::column(5));
-    table.modify(Rows::last(), Span::column(5));
-
-    table.modify(Rows::first(), Alignment::center());
-    table.modify(Rows::single(1), Alignment::center());
-    table.modify(Rows::last(), Alignment::right());
-
-    apply_common_formatting(table)
-}
-
-pub fn apply_common_formatting(table: &mut Table) {
-    table.with(Style::modern());
-    table.with(BorderSpanCorrection);
-
-    table.modify(Rows::first(), Color::BG_BLACK | Color::FG_WHITE);
-    table.modify(Rows::last(), Color::BG_BLACK | Color::FG_WHITE);
-}
-
 // Calculate the total time spent in seconds this month
-fn calculate_total_time(worklogs: &Vec<WorklogItem>) -> i32 {
-    worklogs
-        .iter()
-        .map(|worklog| worklog.time_spent_seconds)
-        .sum()
+fn calculate_total_time(worklogs: &[WorklogItem]) -> i32 {
+    worklogs.iter().map(|w| w.time_spent_seconds).sum()
 }
 
 // Filter out worklogs by date provided by the user
 fn filter_out_worklogs_by_date<'a>(
-    worklogs: &'a Vec<WorklogItem>,
+    worklogs: &'a [WorklogItem],
     date: &str,
 ) -> Vec<&'a WorklogItem> {
     worklogs
         .iter()
-        .filter(|worklog| {
-            let worklog_date = worklog.created_at.split('T').next().unwrap();
-            worklog_date >= date && worklog_date <= date
+        .filter(|w| {
+            let worklog_date = w.created_at.split('T').next().unwrap();
+            worklog_date == date
         })
         .collect()
 }
@@ -174,13 +132,11 @@ mod tests {
     use super::*;
 
     use crate::models::{JiraIssue, TempoIssue, UserCredentials, WorklogItem};
+    use crate::storage::Storage;
 
-    const TEST_DB_PATH: &str = "test_build_list_table";
-
-    fn init_test_db(path: &str) -> Storage {
-        cleanup_test_db(path);
-
-        let storage = Storage::with_path(TEST_DB_PATH);
+    fn make_test_storage(path: &str) -> Storage {
+        let _ = std::fs::remove_dir_all(path);
+        let storage = Storage::with_path(path);
         storage.store_credentials(UserCredentials {
             url: "https://test.atlassian.net".to_string(),
             account_id: "test123".to_string(),
@@ -188,17 +144,13 @@ mod tests {
             jira_token: "test-jira-token".to_string(),
             jira_email: "test@example.com".to_string(),
         });
-
         storage
     }
 
-    fn cleanup_test_db(path: &str) {
-        let _ = std::fs::remove_dir_all(path);
-    }
-
     #[tokio::test]
-    async fn test_build_list_table() {
-        let test_db_path = "test_storage_overwrite";
+    async fn test_build_list_output() {
+        let test_db_path = "test_build_list_output";
+        let storage = make_test_storage(test_db_path);
         let worklogs = vec![WorklogItem {
             tempo_worklog_id: 99,
             time_spent_seconds: 3600,
@@ -211,25 +163,17 @@ mod tests {
             }),
         }];
 
-        let storage = init_test_db(test_db_path);
+        let output = build_list_output(worklogs, "2025-04-01", &storage);
 
-        let table = build_list_table(worklogs, &"2025-04-01".to_string(), &storage);
-        let table_str = table.to_string();
+        assert!(output.contains("April"));
+        assert!(output.contains("1h"));
+        assert!(output.contains("99"));
+        assert!(output.contains("Test comment"));
+        assert!(output.contains("TEST-123"));
+        assert!(output.contains("https://test.atlassian.net/browse/TEST-123"));
+        assert!(output.contains("/8h"));
 
-        assert!(table_str.contains("ID"));
-        assert!(table_str.contains("Duration"));
-        assert!(table_str.contains("Description"));
-        assert!(table_str.contains("Issue URL"));
-
-        assert!(table_str.contains("99"));
-        assert!(table_str.contains("1h"));
-        assert!(table_str.contains("123"));
-        assert!(table_str.contains("Test comment"));
-        assert!(table_str.contains("https://test.atlassian.net/browse/TEST-123"));
-
-        assert!(table_str.contains("1h/8h"));
-
-        cleanup_test_db(test_db_path);
+        let _ = std::fs::remove_dir_all(test_db_path);
     }
 
     #[tokio::test]
@@ -246,12 +190,12 @@ mod tests {
             }),
         }];
 
-        let filtered_worklogs = filter_out_worklogs_by_date(&worklogs, &"2025-04-01".to_string());
-        assert_eq!(filtered_worklogs.len(), 1);
-        assert_eq!(filtered_worklogs[0].tempo_worklog_id, 99);
+        let filtered = filter_out_worklogs_by_date(&worklogs, "2025-04-01");
+        assert_eq!(filtered.len(), 1);
+        assert_eq!(filtered[0].tempo_worklog_id, 99);
 
-        let filtered_worklogs = filter_out_worklogs_by_date(&worklogs, &"2025-04-02".to_string());
-        assert_eq!(filtered_worklogs.len(), 0);
+        let filtered = filter_out_worklogs_by_date(&worklogs, "2025-04-02");
+        assert_eq!(filtered.len(), 0);
     }
 
     #[tokio::test]
@@ -281,8 +225,7 @@ mod tests {
             },
         ];
 
-        let total_time = calculate_total_time(&worklogs);
-        assert_eq!(total_time, 10800);
+        assert_eq!(calculate_total_time(&worklogs), 10800);
     }
 
     #[test]
