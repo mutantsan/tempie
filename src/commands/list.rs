@@ -93,8 +93,7 @@ pub fn format_worklog_entries(
             time,
             hyperlink,
         );
-        out += &format!("  {DIM}{}{RESET}\n", truncate_string(&worklog.description, 200));
-        out += &format!("\n{DIM}  {}{RESET}\n\n", "─".repeat(40));
+        out += &format!("  {DIM}{}{RESET}\n\n", truncate_string(&worklog.description, 200));
     }
 
     out
