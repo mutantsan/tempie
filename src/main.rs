@@ -41,6 +41,15 @@ enum Commands {
         )]
         date_to: String,
     },
+    /// Show a monthly summary of logged vs. working hours per day
+    Month {
+        #[arg(
+            default_value_t = today_as_iso8601(),
+            help = "The month to summarise (format: YYYY-MM, or YYYY-MM-DD)",
+            value_parser = validators::validate_month
+        )]
+        date: String,
+    },
     /// Log time
     Log {
         #[arg(help = "The Jira issue key to log time against (e.g., XXX-123)")]
@@ -84,6 +93,7 @@ async fn main() {
         Commands::ListRange { date_from, date_to } => {
             commands::list_range(&api, &date_from, &date_to).await
         }
+        Commands::Month { date } => commands::month(&api, &date).await,
         Commands::Log {
             issue_key,
             time_spent,

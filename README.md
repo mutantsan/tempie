@@ -80,6 +80,37 @@ View worklogs for a specific date range:
 tempie list-range 2024-03-01 2024-03-31
 ```
 
+### Monthly Summary
+
+Show how many hours you logged each day next to your target working hours, so
+you can see what you still owe:
+
+```bash
+tempie month
+```
+
+By default it shows the current month. Pass a month (or any date within it) to
+see that month instead:
+
+```bash
+tempie month 2024-03
+tempie month 2024-03-01
+```
+
+Example output:
+
+```
+August 2026
+
+      Date          Logged    Target      Diff
+  Mon 2026-08-03       8h         8h        0h
+  Tue 2026-08-04     7h30m        8h      -30m
+  Sat 2026-08-08         ·         ·
+  ...
+  ──────────────────────────────────────────────
+  Total            148h15m      168h   -19h45m
+```
+
 ### Delete Worklog
 
 Remove a worklog by its ID(s). You can provide one or more IDs:
@@ -108,4 +139,3 @@ cargo test
 ## License
 
 MIT License - see [LICENSE](LICENSE) for details.
-

@@ -155,6 +155,7 @@ mod tests {
             time_spent_seconds: 3600,
             description: "Test comment".to_string(),
             created_at: "2025-04-01T00:00:00Z".to_string(),
+            start_date: "2025-04-01".to_string(),
             issue: TempoIssue { id: 123 },
             jira_issue: Some(JiraIssue {
                 id: "123".to_string(),
@@ -182,6 +183,7 @@ mod tests {
             time_spent_seconds: 3600,
             description: "Test comment".to_string(),
             created_at: "2025-04-01T00:00:00Z".to_string(),
+            start_date: "2025-04-01".to_string(),
             issue: TempoIssue { id: 123 },
             jira_issue: Some(JiraIssue {
                 id: "123".to_string(),
@@ -205,6 +207,7 @@ mod tests {
                 time_spent_seconds: 3600,
                 description: "Test comment".to_string(),
                 created_at: "2025-04-01T00:00:00Z".to_string(),
+                start_date: "2025-04-01".to_string(),
                 issue: TempoIssue { id: 123 },
                 jira_issue: Some(JiraIssue {
                     id: "123".to_string(),
@@ -216,6 +219,7 @@ mod tests {
                 time_spent_seconds: 7200,
                 description: "Test comment 2".to_string(),
                 created_at: "2025-04-01T00:00:00Z".to_string(),
+                start_date: "2025-04-01".to_string(),
                 issue: TempoIssue { id: 123 },
                 jira_issue: Some(JiraIssue {
                     id: "123".to_string(),

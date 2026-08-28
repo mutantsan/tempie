@@ -23,6 +23,8 @@ pub struct WorklogItem {
     pub description: String,
     #[serde(rename = "createdAt")]
     pub created_at: String,
+    #[serde(rename = "startDate", default)]
+    pub start_date: String,
     pub issue: TempoIssue,
     #[serde(skip)]
     pub jira_issue: Option<JiraIssue>,

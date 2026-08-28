@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.10.0] - 2026-08-28
+
+### 🚀 Features
+
+- Drop tables visualisation in favour of simple rows
+- Add `month` command for a monthly logged-vs-target summary
+
+### 🐛 Bug Fixes
+
+- Remove the divider line
+
+### ⚙️ Miscellaneous Tasks
+
+- Pin version
+
 ## [0.8.2] - 2025-04-23
 
 ### 🚜 Refactor
