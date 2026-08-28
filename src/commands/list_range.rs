@@ -36,7 +36,7 @@ fn build_range_output(
     );
 
     let refs: Vec<&WorklogItem> = worklogs.iter().collect();
-    out += &crate::commands::list::format_worklog_entries(&refs, &config.url, &mut total_time);
+    out += &crate::commands::list::format_worklog_entries(&refs, &config.url, &mut total_time, true);
 
     out += &format!(
         "  \x1b[1m\x1b[32m{}\x1b[0m total\n",

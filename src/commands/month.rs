@@ -13,8 +13,6 @@ const FG_GREEN: &str = "\x1b[32m";
 const FG_YELLOW: &str = "\x1b[33m";
 const FG_RED: &str = "\x1b[31m";
 
-const WORKING_SECONDS_PER_DAY: i32 = 8 * 3600;
-
 pub async fn month(api: &ApiClient, date: &str) {
     let mut spinner = Spinner::new(Spinners::Dots, "Retrieving worklogs...".to_string());
     let first_day = utils::get_first_day_of_month(date);
@@ -42,16 +40,6 @@ fn worklog_date(worklog: &WorklogItem) -> String {
             .unwrap_or_default()
             .to_string()
     }
-}
-
-// Format a signed difference, e.g -1h30m / +2h / 0h
-fn format_signed(seconds: i32) -> String {
-    if seconds == 0 {
-        return "0h".to_string();
-    }
-
-    let sign = if seconds < 0 { "-" } else { "+" };
-    format!("{}{}", sign, utils::format_duration(seconds.abs()))
 }
 
 fn build_month_output(worklogs: Vec<WorklogItem>, date: &str) -> String {
@@ -82,7 +70,7 @@ fn build_month_output(worklogs: Vec<WorklogItem>, date: &str) -> String {
         let iso = current.format("%Y-%m-%d").to_string();
         let is_weekend = utils::is_weekend(current.weekday());
         let logged = *logged_by_day.get(&iso).unwrap_or(&0);
-        let target = if is_weekend { 0 } else { WORKING_SECONDS_PER_DAY };
+        let target = utils::working_seconds_in_day(&iso);
 
         logged_total += logged;
 
@@ -109,7 +97,7 @@ fn build_month_output(worklogs: Vec<WorklogItem>, date: &str) -> String {
         let diff_str = if is_weekend && logged == 0 {
             String::new()
         } else {
-            format_signed(logged - target)
+            utils::format_signed(logged - target)
         };
         let marker = if current == today { "›" } else { " " };
 
@@ -137,7 +125,7 @@ fn build_month_output(worklogs: Vec<WorklogItem>, date: &str) -> String {
         } else {
             FG_YELLOW
         },
-        format_signed(logged_total - capacity),
+        utils::format_signed(logged_total - capacity),
     );
 
     out
@@ -161,13 +149,6 @@ mod tests {
                 key: "TEST-1".to_string(),
             }),
         }
-    }
-
-    #[test]
-    fn test_format_signed() {
-        assert_eq!(format_signed(0), "0h");
-        assert_eq!(format_signed(3600), "+1h");
-        assert_eq!(format_signed(-5400), "-1h30m");
     }
 
     #[test]

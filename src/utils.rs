@@ -35,6 +35,16 @@ pub fn format_duration(seconds: i32) -> String {
     format!("{}h{}m", hours, minutes)
 }
 
+// Format a signed duration difference, e.g "-1h30m", "+2h", "0h"
+pub fn format_signed(seconds: i32) -> String {
+    if seconds == 0 {
+        return "0h".to_string();
+    }
+
+    let sign = if seconds < 0 { "-" } else { "+" };
+    format!("{}{}", sign, format_duration(seconds.abs()))
+}
+
 // Get how many working hours in a current month
 pub fn working_seconds_in_month(date: &str) -> i32 {
     let date = NaiveDate::parse_from_str(date, "%Y-%m-%d").unwrap();
@@ -55,6 +65,17 @@ pub fn working_seconds_in_month(date: &str) -> i32 {
         .count() as i32;
 
     working_days * WORKING_HOURS_PER_DAY * SECONDS_PER_HOUR
+}
+
+// Get how many working seconds are expected on a given day (0 on weekends)
+pub fn working_seconds_in_day(date: &str) -> i32 {
+    let date = NaiveDate::parse_from_str(date, "%Y-%m-%d").unwrap();
+
+    if is_weekend(date.weekday()) {
+        0
+    } else {
+        WORKING_HOURS_PER_DAY * SECONDS_PER_HOUR
+    }
 }
 
 // Get the first day of the month in ISO 8601 format
@@ -175,6 +196,20 @@ mod tests {
         assert_eq!(format_duration(0), "0h");
         assert_eq!(format_duration(1), "0h");
         assert_eq!(format_duration(61), "1m");
+    }
+
+    #[test]
+    fn test_format_signed() {
+        assert_eq!(format_signed(0), "0h");
+        assert_eq!(format_signed(3600), "+1h");
+        assert_eq!(format_signed(-5400), "-1h30m");
+    }
+
+    #[test]
+    fn test_working_seconds_in_day() {
+        assert_eq!(working_seconds_in_day("2025-04-07"), 28800); // Monday
+        assert_eq!(working_seconds_in_day("2025-04-05"), 0); // Saturday
+        assert_eq!(working_seconds_in_day("2025-04-06"), 0); // Sunday
     }
 
     #[test]

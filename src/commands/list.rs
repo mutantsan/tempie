@@ -34,19 +34,8 @@ fn build_list_output(worklogs: Vec<WorklogItem>, date: &str, storage: &Storage) 
     let config = storage.get_credentials().unwrap();
     let mut out = String::new();
 
-    let worked = calculate_total_time(&worklogs);
-    let capacity = utils::working_seconds_in_month(date);
     out += &format!(
-        "{}{}{} {}/{} {DIM}(-{}){RESET}\n",
-        BOLD,
-        utils::get_month_name(date),
-        RESET,
-        utils::format_duration(worked),
-        utils::format_duration(capacity),
-        utils::format_duration(capacity - worked),
-    );
-    out += &format!(
-        "{DIM}{} ({}){RESET}\n",
+        "{BOLD}{}, {}{RESET}\n\n",
         utils::get_day_name_from_iso8601(date),
         date
     );
@@ -54,23 +43,42 @@ fn build_list_output(worklogs: Vec<WorklogItem>, date: &str, storage: &Storage) 
     let day_worklogs = filter_out_worklogs_by_date(&worklogs, date);
     let mut daily_total = 0;
 
-    if !day_worklogs.is_empty() {
-        out += "\n";
-        out += &format_worklog_entries(&day_worklogs, &config.url, &mut daily_total);
+    if day_worklogs.is_empty() {
+        out += &format!("  {DIM}No worklogs.{RESET}\n\n");
+    } else {
+        out += &format_worklog_entries(&day_worklogs, &config.url, &mut daily_total, false);
     }
 
-    out += &format!(
-        "  {BOLD}{FG_GREEN}{}{RESET}/8h\n",
-        utils::format_duration(daily_total)
-    );
+    let worked = calculate_total_time(&worklogs);
+    let day_capacity = utils::working_seconds_in_day(date);
+    let month_capacity = utils::working_seconds_in_month(date);
+
+    out += &format!("  {}\n", "─".repeat(46));
+    out += &summary_row("Day", daily_total, day_capacity);
+    out += &summary_row(&utils::get_month_name(date), worked, month_capacity);
 
     out
+}
+
+// A right-aligned "<label>  <logged>  <target>  <diff>" totals row, matching `tempie month`.
+fn summary_row(label: &str, actual: i32, target: i32) -> String {
+    let color = if actual >= target { FG_GREEN } else { FG_YELLOW };
+
+    format!(
+        "  {BOLD}{:<16}{RESET}{:>8}  {:>8}  {}{:>8}{RESET}\n",
+        label,
+        utils::format_duration(actual),
+        utils::format_duration(target),
+        color,
+        utils::format_signed(actual - target),
+    )
 }
 
 pub fn format_worklog_entries(
     worklogs: &[&WorklogItem],
     jira_base_url: &str,
     total_time: &mut i32,
+    show_date: bool,
 ) -> String {
     let mut out = String::new();
 
@@ -83,11 +91,11 @@ pub fn format_worklog_entries(
         let time = chrono::DateTime::parse_from_rfc3339(&worklog.created_at)
             .unwrap()
             .with_timezone(&chrono::Local)
-            .format("%m-%d %H:%M")
+            .format(if show_date { "%m-%d %H:%M" } else { "%H:%M" })
             .to_string();
 
         out += &format!(
-            "  {BOLD}{FG_YELLOW}#{}{RESET}  {FG_GREEN}{}{RESET}  {DIM}{}{RESET}  {FG_CYAN}{}{RESET}\n",
+            "  {BOLD}{FG_YELLOW}#{:<7}{RESET} {FG_GREEN}{:>6}{RESET}  {DIM}{}{RESET}  {FG_CYAN}{}{RESET}\n",
             worklog.tempo_worklog_id,
             utils::format_duration(worklog.time_spent_seconds),
             time,
@@ -165,13 +173,16 @@ mod tests {
 
         let output = build_list_output(worklogs, "2025-04-01", &storage);
 
+        assert!(output.contains("Tuesday, 2025-04-01"));
         assert!(output.contains("April"));
         assert!(output.contains("1h"));
         assert!(output.contains("99"));
         assert!(output.contains("Test comment"));
         assert!(output.contains("TEST-123"));
         assert!(output.contains("https://test.atlassian.net/browse/TEST-123"));
-        assert!(output.contains("/8h"));
+        // day/month summary rows
+        assert!(output.contains("Day"));
+        assert!(output.contains("8h"));
 
         let _ = std::fs::remove_dir_all(test_db_path);
     }
