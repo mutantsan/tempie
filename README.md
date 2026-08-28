@@ -1,5 +1,8 @@
 # Tempie
 
+[![CI](https://github.com/mutantsan/tempie/actions/workflows/ci.yml/badge.svg)](https://github.com/mutantsan/tempie/actions/workflows/ci.yml)
+[![crates.io](https://img.shields.io/crates/v/tempie.svg)](https://crates.io/crates/tempie)
+
 A command-line tool for tracking time in Jira using Tempo.
 
 The `tempie list` command output example:
