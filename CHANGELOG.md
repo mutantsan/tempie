@@ -7,17 +7,11 @@ All notable changes to this project will be documented in this file.
 ### 🚀 Features
 
 - Drop tables visualisation in favour of simple rows
-- Add `month` command for a monthly logged-vs-target summary
+- Add month command
 
 ### 🐛 Bug Fixes
 
 - Remove the divider line
-
-### ⚙️ Miscellaneous Tasks
-
-- Pin version
-
-## [0.8.2] - 2025-04-23
 
 ### 🚜 Refactor
 
@@ -26,6 +20,10 @@ All notable changes to this project will be documented in this file.
 ### 📚 Documentation
 
 - Update doc to include list-range command
+
+### ⚙️ Miscellaneous Tasks
+
+- Pin version
 
 ## [0.8.0] - 2025-04-10
 
