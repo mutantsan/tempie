@@ -62,7 +62,11 @@ fn build_list_output(worklogs: Vec<WorklogItem>, date: &str, storage: &Storage) 
 
 // A right-aligned "<label>  <logged>  <target>  <diff>" totals row, matching `tempie month`.
 fn summary_row(label: &str, actual: i32, target: i32) -> String {
-    let color = if actual >= target { FG_GREEN } else { FG_YELLOW };
+    let color = if actual >= target {
+        FG_GREEN
+    } else {
+        FG_YELLOW
+    };
 
     format!(
         "  {BOLD}{:<16}{RESET}{:>8}  {:>8}  {}{:>8}{RESET}\n",
@@ -88,11 +92,20 @@ pub fn format_worklog_entries(
         let key = &worklog.jira_issue.as_ref().unwrap().key;
         let url = format!("{}/browse/{}", jira_base_url, key);
         let hyperlink = format!("\x1b]8;;{}\x1b\\{}\x1b]8;;\x1b\\", url, key);
-        let time = chrono::DateTime::parse_from_rfc3339(&worklog.created_at)
+        // Clock time comes from createdAt (roughly when the log was entered);
+        // the date comes from work_date() so it matches how worklogs are grouped
+        // by day (see WorklogItem::work_date).
+        let clock = chrono::DateTime::parse_from_rfc3339(&worklog.created_at)
             .unwrap()
             .with_timezone(&chrono::Local)
-            .format(if show_date { "%m-%d %H:%M" } else { "%H:%M" })
+            .format("%H:%M")
             .to_string();
+        let time = if show_date {
+            let work_date = worklog.work_date();
+            format!("{} {}", &work_date[5..], clock)
+        } else {
+            clock
+        };
 
         out += &format!(
             "  {BOLD}{FG_YELLOW}#{:<7}{RESET} {FG_GREEN}{:>6}{RESET}  {DIM}{}{RESET}  {FG_CYAN}{}{RESET}\n",
@@ -101,7 +114,10 @@ pub fn format_worklog_entries(
             time,
             hyperlink,
         );
-        out += &format!("  {DIM}{}{RESET}\n\n", truncate_string(&worklog.description, 200));
+        out += &format!(
+            "  {DIM}{}{RESET}\n\n",
+            truncate_string(&worklog.description, 200)
+        );
     }
 
     out
@@ -125,13 +141,7 @@ fn filter_out_worklogs_by_date<'a>(
     worklogs: &'a [WorklogItem],
     date: &str,
 ) -> Vec<&'a WorklogItem> {
-    worklogs
-        .iter()
-        .filter(|w| {
-            let worklog_date = w.created_at.split('T').next().unwrap();
-            worklog_date == date
-        })
-        .collect()
+    worklogs.iter().filter(|w| w.work_date() == date).collect()
 }
 
 #[cfg(test)]
@@ -208,6 +218,33 @@ mod tests {
 
         let filtered = filter_out_worklogs_by_date(&worklogs, "2025-04-02");
         assert_eq!(filtered.len(), 0);
+    }
+
+    #[tokio::test]
+    async fn test_filter_out_worklogs_past_midnight() {
+        // Logged just after midnight local time: createdAt is the previous day
+        // in UTC, but the work belongs to the startDate.
+        let worklogs = vec![WorklogItem {
+            tempo_worklog_id: 1,
+            time_spent_seconds: 3600,
+            description: "Late night work".to_string(),
+            created_at: "2025-04-01T21:13:00Z".to_string(),
+            start_date: "2025-04-02".to_string(),
+            issue: TempoIssue { id: 123 },
+            jira_issue: Some(JiraIssue {
+                id: "123".to_string(),
+                key: "TEST-123".to_string(),
+            }),
+        }];
+
+        assert_eq!(
+            filter_out_worklogs_by_date(&worklogs, "2025-04-02").len(),
+            1
+        );
+        assert_eq!(
+            filter_out_worklogs_by_date(&worklogs, "2025-04-01").len(),
+            0
+        );
     }
 
     #[tokio::test]

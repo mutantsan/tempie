@@ -28,20 +28,6 @@ pub async fn month(api: &ApiClient, date: &str) {
     }
 }
 
-// The day a worklog belongs to. Prefer Tempo's startDate, fall back to createdAt.
-fn worklog_date(worklog: &WorklogItem) -> String {
-    if !worklog.start_date.is_empty() {
-        worklog.start_date.clone()
-    } else {
-        worklog
-            .created_at
-            .split('T')
-            .next()
-            .unwrap_or_default()
-            .to_string()
-    }
-}
-
 fn build_month_output(worklogs: Vec<WorklogItem>, date: &str) -> String {
     let parsed = NaiveDate::parse_from_str(date, "%Y-%m-%d").unwrap();
     let (year, month_num) = (parsed.year(), parsed.month());
@@ -49,7 +35,7 @@ fn build_month_output(worklogs: Vec<WorklogItem>, date: &str) -> String {
 
     let mut logged_by_day: HashMap<String, i32> = HashMap::new();
     for worklog in &worklogs {
-        *logged_by_day.entry(worklog_date(worklog)).or_insert(0) += worklog.time_spent_seconds;
+        *logged_by_day.entry(worklog.work_date()).or_insert(0) += worklog.time_spent_seconds;
     }
 
     let last_day = NaiveDate::parse_from_str(&utils::get_last_day_of_month(date), "%Y-%m-%d")
@@ -155,7 +141,15 @@ mod tests {
     fn test_worklog_date_falls_back_to_created_at() {
         let mut item = worklog("2025-04-01", 3600);
         item.start_date = String::new();
-        assert_eq!(worklog_date(&item), "2025-04-01");
+        assert_eq!(item.work_date(), "2025-04-01");
+    }
+
+    #[test]
+    fn test_worklog_date_prefers_start_date_over_created_at() {
+        // Logged at 00:13 local time -> createdAt is the previous day in UTC.
+        let mut item = worklog("2025-04-02", 3600);
+        item.created_at = "2025-04-01T21:13:00Z".to_string();
+        assert_eq!(item.work_date(), "2025-04-02");
     }
 
     #[test]
