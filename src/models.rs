@@ -30,6 +30,24 @@ pub struct WorklogItem {
     pub jira_issue: Option<JiraIssue>,
 }
 
+impl WorklogItem {
+    // The day a worklog belongs to. Prefer Tempo's startDate (the date the work
+    // is logged against), fall back to the createdAt date. These diverge when a
+    // worklog is created close to midnight: createdAt is UTC, so logging at
+    // 00:13 local time can land on the previous calendar day.
+    pub fn work_date(&self) -> String {
+        if !self.start_date.is_empty() {
+            self.start_date.clone()
+        } else {
+            self.created_at
+                .split('T')
+                .next()
+                .unwrap_or_default()
+                .to_string()
+        }
+    }
+}
+
 #[derive(Debug, Deserialize)]
 pub struct TempoIssue {
     pub id: i64,
