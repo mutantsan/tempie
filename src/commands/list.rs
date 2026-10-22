@@ -17,7 +17,20 @@ pub async fn list(api: &ApiClient, date: &str) {
     let first_day = utils::get_first_day_of_month(date);
     let last_day = utils::get_last_day_of_month(date);
 
-    match api.list_worklogs(&first_day, &last_day).await {
+    let result = async {
+        let mut worklogs = api.list_worklogs(&first_day, &last_day).await?;
+        // Only the selected day's entries are displayed, so only they need Jira
+        // keys; the rest of the month just feeds the monthly total.
+        let mut day_worklogs: Vec<&mut WorklogItem> = worklogs
+            .iter_mut()
+            .filter(|w| w.work_date() == date)
+            .collect();
+        api.attach_jira_issues(&mut day_worklogs).await?;
+        Ok::<_, String>(worklogs)
+    }
+    .await;
+
+    match result {
         Ok(worklogs) => {
             spinner.stop_with_message(format!(
                 "\n{}",

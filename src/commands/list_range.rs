@@ -7,7 +7,15 @@ use spinners::{Spinner, Spinners};
 pub async fn list_range(api: &ApiClient, date_from: &str, date_to: &str) {
     let mut spinner = Spinner::new(Spinners::Dots, "Retrieving worklogs...".to_string());
 
-    match api.list_worklogs(date_from, date_to).await {
+    let result = async {
+        let mut worklogs = api.list_worklogs(date_from, date_to).await?;
+        let mut refs: Vec<&mut WorklogItem> = worklogs.iter_mut().collect();
+        api.attach_jira_issues(&mut refs).await?;
+        Ok::<_, String>(worklogs)
+    }
+    .await;
+
+    match result {
         Ok(worklogs) => {
             spinner.stop_with_message(format!(
                 "\n{}",

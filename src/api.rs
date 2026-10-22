@@ -4,10 +4,13 @@ use crate::utils::parse_duration_from_string;
 use chrono::Local;
 use futures::{stream, StreamExt};
 use reqwest::{Client, StatusCode};
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 const TEMPO_BASE_URL: &str = "https://api.tempo.io/4";
 const CONCURRENT_REQUESTS: usize = 5;
+// Big enough to fetch a typical month in a single request
+const WORKLOGS_PAGE_SIZE: usize = 1000;
+const JIRA_SEARCH_BATCH_SIZE: usize = 100;
 
 #[async_trait::async_trait]
 pub trait ApiTrait {
@@ -18,6 +21,7 @@ pub trait ApiTrait {
         comment: Option<String>,
     ) -> Result<WorklogItem, String>;
     async fn list_worklogs(&self, from: &str, to: &str) -> Result<Vec<WorklogItem>, String>;
+    async fn attach_jira_issues(&self, worklogs: &mut [&mut WorklogItem]) -> Result<(), String>;
     async fn delete_worklogs(&self, ids: &Vec<String>) -> Result<(), String>;
     async fn get_jira_issue(&self, issue_or_key: &str) -> Result<JiraIssue, String>;
 }
@@ -39,31 +43,36 @@ impl ApiClient {
         }
     }
 
-    // Prefetch Jira issues concurrently
-    async fn prefetch_jira_issues_concurrently(
-        &self,
-        worklogs: &Vec<WorklogItem>,
-    ) -> Vec<JiraIssue> {
-        let mut issues = HashSet::new();
+    // Resolve many Jira issues in one round-trip per batch via JQL. Best-effort:
+    // returns whatever it managed to find, the caller falls back to single lookups.
+    async fn search_jira_issues_by_id(&self, issue_ids: &[String]) -> Vec<JiraIssue> {
+        let mut found = Vec::new();
 
-        for worklog in worklogs {
-            issues.insert(worklog.issue.id.to_string());
-        }
+        for chunk in issue_ids.chunks(JIRA_SEARCH_BATCH_SIZE) {
+            let jql = format!("id in ({})", chunk.join(","));
 
-        stream::iter(issues.iter().cloned())
-            .map(|issue_id| async move {
-                match self.get_jira_issue(&issue_id).await {
-                    Ok(issue) => Some(issue),
-                    Err(e) => {
-                        eprintln!("Failed to fetch issue {}: {}", issue_id, e);
-                        None
+            let response = self
+                .client
+                .get(format!("{}/rest/api/3/search/jql", self.config.url))
+                .basic_auth(&self.config.jira_email, Some(&self.config.jira_token))
+                .query(&[
+                    ("jql", jql.as_str()),
+                    ("fields", "key"),
+                    ("maxResults", JIRA_SEARCH_BATCH_SIZE.to_string().as_str()),
+                ])
+                .send()
+                .await;
+
+            if let Ok(response) = response {
+                if response.status().is_success() {
+                    if let Ok(data) = response.json::<JiraSearchResponse>().await {
+                        found.extend(data.issues);
                     }
                 }
-            })
-            .buffer_unordered(CONCURRENT_REQUESTS)
-            .filter_map(async move |res| res) // Only keep successful results
-            .collect()
-            .await
+            }
+        }
+
+        found
     }
 }
 
@@ -120,7 +129,6 @@ impl ApiTrait for ApiClient {
         let mut worklogs: Vec<WorklogItem> = Vec::new();
 
         let mut offset = 0;
-        let limit = 50;
 
         loop {
             let response = self
@@ -134,6 +142,7 @@ impl ApiTrait for ApiClient {
                     ("from", from_date),
                     ("to", to_date),
                     ("offset", offset.to_string().as_str()),
+                    ("limit", WORKLOGS_PAGE_SIZE.to_string().as_str()),
                 ])
                 .send()
                 .await
@@ -144,30 +153,92 @@ impl ApiTrait for ApiClient {
                 return Err(format!("Failed to fetch worklogs: {}", status));
             }
 
-            let mut json_data: UserWorklogsResponse = response
+            let json_data: UserWorklogsResponse = response
                 .json()
                 .await
                 .map_err(|e| format!("Failed to parse JSON: {}", e))?;
 
-            if json_data.results.is_empty() {
-                break;
-            }
-
-            let _ = self
-                .prefetch_jira_issues_concurrently(&json_data.results)
-                .await;
-
-            for worklog in json_data.results.iter_mut() {
-                worklog.jira_issue =
-                    Some(self.get_jira_issue(&worklog.issue.id.to_string()).await?);
-            }
+            let page_len = json_data.results.len();
+            // Tempo omits `metadata.next` on the last page. Without metadata,
+            // fall back to paging until an empty page comes back.
+            let has_more = match &json_data.metadata {
+                Some(metadata) => metadata.next.is_some(),
+                None => page_len > 0,
+            };
 
             worklogs.extend(json_data.results);
 
-            offset += limit;
+            if !has_more || page_len == 0 {
+                break;
+            }
+
+            // Advance by what was actually returned, in case Tempo caps the limit
+            offset += page_len;
         }
 
         Ok(worklogs)
+    }
+
+    // Fill in `jira_issue` for the given worklogs: cached issues first, then one
+    // batched Jira search for the rest, then single lookups for anything left.
+    async fn attach_jira_issues(&self, worklogs: &mut [&mut WorklogItem]) -> Result<(), String> {
+        let mut issues: HashMap<String, JiraIssue> = HashMap::new();
+        let mut missing: HashSet<String> = HashSet::new();
+
+        for worklog in worklogs.iter() {
+            let issue_id = worklog.issue.id.to_string();
+
+            if issues.contains_key(&issue_id) || missing.contains(&issue_id) {
+                continue;
+            }
+
+            match self.storage.get_jira_issue(&issue_id) {
+                Some(issue) => {
+                    issues.insert(issue_id, issue);
+                }
+                None => {
+                    missing.insert(issue_id);
+                }
+            }
+        }
+
+        if !missing.is_empty() {
+            let missing: Vec<String> = missing.into_iter().collect();
+
+            let found = self.search_jira_issues_by_id(&missing).await;
+            self.storage.store_jira_issues(&found);
+            for issue in found {
+                issues.insert(issue.id.clone(), issue);
+            }
+
+            // Whatever the search didn't return (JQL error, deleted issue, no
+            // access) goes through single lookups, which report a proper error.
+            let leftover: Vec<String> = missing
+                .into_iter()
+                .filter(|issue_id| !issues.contains_key(issue_id))
+                .collect();
+
+            let fetched: Vec<Result<JiraIssue, String>> = stream::iter(leftover)
+                .map(|issue_id| async move {
+                    self.get_jira_issue(&issue_id)
+                        .await
+                        .map_err(|e| format!("Failed to fetch issue {}: {}", issue_id, e))
+                })
+                .buffer_unordered(CONCURRENT_REQUESTS)
+                .collect()
+                .await;
+
+            for result in fetched {
+                let issue = result?;
+                issues.insert(issue.id.clone(), issue);
+            }
+        }
+
+        for worklog in worklogs.iter_mut() {
+            worklog.jira_issue = issues.get(&worklog.issue.id.to_string()).cloned();
+        }
+
+        Ok(())
     }
 
     // Delete a worklog by its ID

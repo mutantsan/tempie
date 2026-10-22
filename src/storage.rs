@@ -58,19 +58,23 @@ impl Storage {
 
     // Store jira issue info
     pub fn store_jira_issue(&self, issue: &JiraIssue) {
-        self.db
-            .insert(
-                issue.id.as_str(),
-                serde_json::to_string(issue).unwrap().as_bytes(),
-            )
-            .unwrap();
+        self.store_jira_issues(std::slice::from_ref(issue));
+    }
 
-        self.db
-            .insert(
-                issue.key.as_str(),
-                serde_json::to_string(issue).unwrap().as_bytes(),
-            )
-            .unwrap();
+    // Store several jira issues with a single flush
+    pub fn store_jira_issues(&self, issues: &[JiraIssue]) {
+        if issues.is_empty() {
+            return;
+        }
+
+        for issue in issues {
+            let serialized = serde_json::to_vec(issue).unwrap();
+
+            self.db
+                .insert(issue.id.as_str(), serialized.as_slice())
+                .unwrap();
+            self.db.insert(issue.key.as_str(), serialized).unwrap();
+        }
 
         self.db.flush().unwrap();
     }
@@ -177,6 +181,30 @@ mod tests {
         assert_eq!(retrieved_by_id.key, test_issue.key);
 
         let _ = fs::remove_dir_all(test_db_path);
+    }
+
+    #[test]
+    fn test_storage_jira_issues_batch() {
+        let test_db_path = "test_storage_jira_issues_batch";
+        cleanup_test_db(test_db_path);
+        let storage = Storage::with_path(test_db_path);
+
+        storage.store_jira_issues(&[]);
+        storage.store_jira_issues(&[
+            JiraIssue {
+                id: "1".to_string(),
+                key: "TEST-1".to_string(),
+            },
+            JiraIssue {
+                id: "2".to_string(),
+                key: "TEST-2".to_string(),
+            },
+        ]);
+
+        assert_eq!(storage.get_jira_issue("1").unwrap().key, "TEST-1");
+        assert_eq!(storage.get_jira_issue("TEST-2").unwrap().id, "2");
+
+        cleanup_test_db(test_db_path);
     }
 
     #[test]

@@ -11,7 +11,14 @@ pub struct UserCredentials {
 
 #[derive(Debug, Deserialize)]
 pub struct UserWorklogsResponse {
+    pub metadata: Option<ResponseMetadata>,
     pub results: Vec<WorklogItem>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ResponseMetadata {
+    // URL of the next page; absent on the last page.
+    pub next: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -53,8 +60,13 @@ pub struct TempoIssue {
     pub id: i64,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct JiraIssue {
     pub id: String,
     pub key: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct JiraSearchResponse {
+    pub issues: Vec<JiraIssue>,
 }
