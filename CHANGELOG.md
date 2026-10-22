@@ -2,11 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.2] - 2026-10-22
+
+### 🐛 Bug Fixes
+
+- Group worklogs by startDate so past-midnight logs land on the right day
+
+### ⚡ Performance
+
+- Speed up list by fetching a month in one request and batching Jira lookups
+
+### 🧪 Testing
+
+- Add github action tests
+
 ## [0.11.0] - 2026-08-28
 
 ### 🚀 Features
 
 - Restyle list output to match the month summary
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelog [skip changelog]
 
 ## [0.10.0] - 2026-08-28
 
